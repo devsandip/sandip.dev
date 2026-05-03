@@ -378,29 +378,16 @@
     aspect-ratio: 4/5;
     background: var(--paper-2);
     border: 1px solid var(--rule);
-    display: grid;
-    place-items: center;
     overflow: hidden;
     position: relative;
   }
-  .portrait::before {
-    content: 'portrait';
-    position: absolute;
-    bottom: 12px; left: 12px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--ink-softer);
-  }
-  .portrait::after {
-    content: '';
-    position: absolute;
-    inset: 16px;
-    background: radial-gradient(ellipse at center, transparent 30%, var(--paper-2) 75%),
-                linear-gradient(135deg, var(--ink-soft) 0%, var(--ink) 100%);
-    border-radius: 50%;
-    opacity: 0.55;
+  .portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 25%;
+    display: block;
+    filter: contrast(1.02);
   }
 
   .story {
@@ -1084,7 +1071,7 @@
         I'm a Product Manager. I've spent thirteen years figuring out what people actually want versus what they say they want — and the gap, it turns out, is where all the interesting work happens.
       </p>
     </div>
-    <div class="portrait"></div>
+    <div class="portrait"><img src="portrait.png" alt="Sandip Dev" loading="lazy"></div>
   </div>
 
   <div class="story">
