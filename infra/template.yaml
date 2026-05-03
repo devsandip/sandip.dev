@@ -22,7 +22,7 @@ Parameters:
 
 Globals:
   Function:
-    Runtime: python3.12
+    Runtime: python3.13
     Timeout: 15
     MemorySize: 256
     Architectures: [arm64]
@@ -125,7 +125,6 @@ Resources:
           TABLE_NAME: !Ref ReferralTable
           SES_FROM: !Sub 'Sandip Dev <${FromEmail}>'
           ADMIN_TO: !Ref AdminEmail
-          VIEW_BASE: !Sub 'https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/r'
           ALLOW_ORIGIN: !Ref AllowOrigin
           TTL_DAYS: '365'
       Policies:

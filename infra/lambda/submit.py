@@ -16,7 +16,7 @@ from botocore.exceptions import ClientError
 TABLE_NAME = os.environ["TABLE_NAME"]
 SES_FROM   = os.environ["SES_FROM"]            # e.g. "Sandip Dev <noreply@sandip.dev>"
 ADMIN_TO   = os.environ["ADMIN_TO"]            # me@sandip.dev
-VIEW_BASE  = os.environ["VIEW_BASE"]           # https://api.sandip.dev/r/   or API GW URL
+VIEW_BASE  = os.environ.get("VIEW_BASE", "")   # optional override; otherwise derived from request
 ALLOW_ORIGIN = os.environ.get("ALLOW_ORIGIN", "*")
 TTL_DAYS   = int(os.environ.get("TTL_DAYS", "365"))
 
@@ -277,7 +277,12 @@ def handler(event, context):
         print(f"DDB put_item failed: {e}")
         return _resp(500, {"message":"Could not save your submission. Please retry."})
 
-    view_url = VIEW_BASE.rstrip("/") + "/" + token
+    if VIEW_BASE:
+        view_url = VIEW_BASE.rstrip("/") + "/" + token
+    else:
+        rc = event.get("requestContext", {}) or {}
+        domain = rc.get("domainName", "")
+        view_url = f"https://{domain}/r/{token}" if domain else f"/r/{token}"
 
     # admin email (full)
     subj_a, body_a = _fmt_email(rec, view_url, for_admin=True)

@@ -29,7 +29,7 @@ else
   CONFIRM_FLAG="--confirm-changeset"
 fi
 
-sam build --use-container=false
+sam build
 
 sam deploy \
   --stack-name "$STACK" \
