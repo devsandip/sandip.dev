@@ -373,21 +373,43 @@
     max-width: 540px;
     line-height: 1.5;
   }
+  /* polaroid frame */
   .portrait {
     width: 100%;
+    background: #fafaf6;
+    padding: 12px 12px 56px;
+    box-shadow:
+      0 1px 2px rgba(0,0,0,0.06),
+      0 14px 36px rgba(0,0,0,0.14);
+    transform: rotate(-1.8deg);
+    transition: transform 0.5s cubic-bezier(.2,.8,.2,1);
+    position: relative;
+  }
+  .portrait:hover { transform: rotate(0deg) scale(1.01); }
+  .portrait-photo {
     aspect-ratio: 4/5;
-    background: var(--paper-2);
-    border: 1px solid var(--rule);
+    background: #000;
     overflow: hidden;
     position: relative;
   }
-  .portrait img {
+  .portrait-photo img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 25%;
+    object-position: center 22%;
     display: block;
-    filter: contrast(1.02);
+  }
+  .portrait-caption {
+    position: absolute;
+    left: 0; right: 0;
+    bottom: 16px;
+    text-align: center;
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 17px;
+    color: #2a2a2a;
+    letter-spacing: 0.01em;
   }
 
   .story {
@@ -1071,7 +1093,10 @@
         I'm a Product Manager. I've spent thirteen years figuring out what people actually want versus what they say they want — and the gap, it turns out, is where all the interesting work happens.
       </p>
     </div>
-    <div class="portrait"><img src="portrait.png" alt="Sandip Dev" loading="lazy"></div>
+    <div class="portrait">
+      <div class="portrait-photo"><img src="portrait.png" alt="Sandip Dev" loading="lazy"></div>
+      <div class="portrait-caption">sandip · dallas '26</div>
+    </div>
   </div>
 
   <div class="story">
