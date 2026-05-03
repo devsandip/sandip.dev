@@ -1331,10 +1331,10 @@
     <div class="label">// every other way to reach me</div>
     <div>
       <div class="channels-grid">
-        <div class="channel">
+        <div class="channel" id="email-channel" role="button" tabindex="0" aria-label="Reveal email address">
           <div>
             <div class="channel-name">Email</div>
-            <div class="channel-handle">me@sandip.dev</div>
+            <div class="channel-handle" id="email-handle" data-u="bWU=" data-d="c2FuZGlwLmRldg==">click to reveal &amp; copy</div>
           </div>
           <span class="channel-arrow">↗</span>
         </div>
@@ -1471,6 +1471,31 @@
   }
   updateTime();
   setInterval(updateTime, 30000);
+
+  // ─── Email reveal (anti-scrape) ───────────────────────────
+  // Address is base64-split across data-u / data-d, assembled at runtime.
+  // No mailto: in markup, no @ in text — bots that don't run JS see nothing useful.
+  (function(){
+    const ch = document.getElementById('email-channel');
+    const h = document.getElementById('email-handle');
+    if (!ch || !h) return;
+    const decode = () => {
+      try {
+        return atob(h.dataset.u) + String.fromCharCode(64) + atob(h.dataset.d);
+      } catch { return ''; }
+    };
+    let revealed = false;
+    const reveal = async () => {
+      const addr = decode();
+      if (!addr) return;
+      h.textContent = addr;
+      revealed = true;
+      try { await navigator.clipboard.writeText(addr); h.dataset.copied = '1'; } catch {}
+      window.location.href = 'mailto:' + addr;
+    };
+    ch.addEventListener('click', e => { e.preventDefault(); revealed ? window.location.href = 'mailto:' + decode() : reveal(); });
+    ch.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); ch.click(); } });
+  })();
 </script>
 
 </body>
