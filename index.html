@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sandip Dev — Product builder, quietly opinionated</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet">
+<style>
+  /* Default theme: Cool Fog (Linear-ish, Swiss-modern) */
+  :root, [data-theme="fog"] {
+    --paper: #F6F6F7;
+    --paper-2: #EFEFF1;
+    --ink: #0A0A0B;
+    --ink-soft: #4A4A52;
+    --ink-softer: #8A8A92;
+    --rule: #E2E2E5;
+    --rule-soft: #ECECEF;
+    --accent: #1F4DDA;
+    --accent-soft: rgba(31, 77, 218, 0.08);
+    --highlight: #F2D75A;
+  }
+
+  /* True White (Vercel docs) */
+  [data-theme="white"] {
+    --paper: #FFFFFF;
+    --paper-2: #FAFAFA;
+    --ink: #000000;
+    --ink-soft: #525252;
+    --ink-softer: #8F8F8F;
+    --rule: #EAEAEA;
+    --rule-soft: #F2F2F2;
+    --accent: #000000;
+    --accent-soft: rgba(0, 0, 0, 0.05);
+    --highlight: #FFE662;
+  }
+
+  /* Warm Paper (the cream I shipped originally) */
+  [data-theme="paper"] {
+    --paper: #F4F1E8;
+    --paper-2: #ECE7D7;
+    --ink: #161513;
+    --ink-soft: #5C5A52;
+    --ink-softer: #8E8B7F;
+    --rule: #D8D2BF;
+    --rule-soft: #E5E0CE;
+    --accent: #B5462A;
+    --accent-soft: rgba(181, 70, 42, 0.08);
+    --highlight: #F2D75A;
+  }
+
+  /* Dark / Ink */
+  [data-theme="ink"] {
+    --paper: #0E0E10;
+    --paper-2: #16161A;
+    --ink: #F2F2F4;
+    --ink-soft: #9A9AA3;
+    --ink-softer: #5E5E66;
+    --rule: #2A2A30;
+    --rule-soft: #1F1F24;
+    --accent: #E07650;
+    --accent-soft: rgba(224, 118, 80, 0.12);
+    --highlight: #E0B84F;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: 'ss01', 'cv11';
+    overflow-x: hidden;
+  }
+
+  /* subtle paper grain — only on warm paper theme */
+  [data-theme="paper"] body::before,
+  body[data-grain]::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      radial-gradient(rgba(0,0,0,0.025) 1px, transparent 1px);
+    background-size: 3px 3px;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.6;
+  }
+
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+  .serif { font-family: 'Fraunces', Georgia, serif; font-feature-settings: 'ss01'; }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* ─── Header ───────────────────────────── */
+  header.site {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+  }
+  .header-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 18px 32px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 32px;
+  }
+  .logo {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+  .logo-mark {
+    width: 22px; height: 22px;
+    background: var(--ink);
+    color: var(--paper);
+    display: grid; place-items: center;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  nav.primary {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+  }
+  nav.primary a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: lowercase;
+    padding: 8px 14px;
+    color: var(--ink-soft);
+    transition: color 0.15s;
+    position: relative;
+  }
+  nav.primary a:hover { color: var(--ink); }
+  nav.primary a.active { color: var(--ink); }
+  nav.primary a.active::before {
+    content: '·';
+    color: var(--accent);
+    margin-right: 4px;
+  }
+  .header-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.03em;
+    color: var(--ink-softer);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .status-dot {
+    width: 6px; height: 6px;
+    background: #6B9F4D;
+    border-radius: 50%;
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+
+  /* ─── Page Frame ───────────────────────── */
+  main { position: relative; z-index: 2; }
+  .page {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: none;
+    animation: fadeIn 0.4s ease;
+  }
+  .page.active { display: block; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── Section Label ────────────────────── */
+  .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-softer);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .label::before {
+    content: '';
+    width: 24px; height: 1px;
+    background: var(--ink-softer);
+  }
+  .label.no-rule::before { display: none; }
+
+  /* ─── HOME ─────────────────────────────── */
+  .home {
+    padding-top: 80px;
+    padding-bottom: 120px;
+  }
+  .home-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 64px;
+    align-items: start;
+  }
+  .home h1 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: clamp(64px, 9vw, 124px);
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    margin-top: 16px;
+  }
+  .home h1 .amp {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  .home .tagline {
+    margin-top: 32px;
+    font-size: 22px;
+    line-height: 1.4;
+    max-width: 520px;
+    color: var(--ink);
+    font-weight: 400;
+  }
+  .home .tagline em {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    color: var(--accent);
+  }
+  .home .sub {
+    margin-top: 24px;
+    font-size: 14px;
+    color: var(--ink-soft);
+    max-width: 520px;
+  }
+  .links-block {
+    margin-top: 64px;
+  }
+  .links-list {
+    margin-top: 20px;
+    border-top: 1px solid var(--rule);
+  }
+  .link-row {
+    display: grid;
+    grid-template-columns: 36px 1fr auto auto;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--rule);
+    cursor: pointer;
+    transition: padding 0.2s ease;
+  }
+  .link-row:hover { padding-left: 8px; }
+  .link-row:hover .link-arrow { transform: translateX(4px); color: var(--accent); }
+  .link-row:hover .link-name { color: var(--accent); }
+  .link-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-softer);
+    letter-spacing: 0.05em;
+  }
+  .link-name {
+    font-size: 18px;
+    font-weight: 500;
+    transition: color 0.15s;
+  }
+  .link-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-softer);
+    text-transform: lowercase;
+    letter-spacing: 0.03em;
+  }
+  .link-arrow {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--ink-soft);
+    transition: transform 0.2s, color 0.2s;
+  }
+
+  /* sidebar - currently */
+  .sidebar-card {
+    border: 1px solid var(--rule);
+    padding: 24px;
+    background: var(--paper-2);
+  }
+  .currently-list {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .currently-row {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 12px;
+    font-size: 14px;
+    line-height: 1.4;
+    align-items: baseline;
+  }
+  .currently-key {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-softer);
+  }
+  .currently-val { color: var(--ink); }
+  .currently-val em {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    color: var(--accent);
+  }
+  .footnote {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-softer);
+    line-height: 1.5;
+  }
+
+  /* ─── ABOUT ────────────────────────────── */
+  .about {
+    padding-top: 80px;
+    padding-bottom: 120px;
+  }
+  .about-hero {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 64px;
+    align-items: end;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 48px;
+  }
+  .about-hero h1 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: clamp(48px, 6vw, 84px);
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+    margin-top: 16px;
+  }
+  .about-hero h1 em {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    color: var(--accent);
+  }
+  .about-hero .lead {
+    margin-top: 24px;
+    font-size: 18px;
+    color: var(--ink-soft);
+    max-width: 540px;
+    line-height: 1.5;
+  }
+  .portrait {
+    width: 100%;
+    aspect-ratio: 4/5;
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    position: relative;
+  }
+  .portrait::before {
+    content: 'portrait';
+    position: absolute;
+    bottom: 12px; left: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-softer);
+  }
+  .portrait::after {
+    content: '';
+    position: absolute;
+    inset: 16px;
+    background: radial-gradient(ellipse at center, transparent 30%, var(--paper-2) 75%),
+                linear-gradient(135deg, var(--ink-soft) 0%, var(--ink) 100%);
+    border-radius: 50%;
+    opacity: 0.55;
+  }
+
+  .story {
+    margin-top: 80px;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 64px;
+    align-items: start;
+  }
+  .story-body {
+    max-width: 640px;
+  }
+  .story-body p {
+    font-size: 17px;
+    line-height: 1.65;
+    margin-bottom: 22px;
+    color: var(--ink);
+  }
+  .story-body p .pullquote {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 1.05em;
+  }
+  .story-body .marker {
+    background: linear-gradient(180deg, transparent 60%, var(--highlight) 60%);
+    padding: 0 2px;
+  }
+  .story-body strong {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .data-block {
+    margin-top: 96px;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 64px;
+    align-items: start;
+  }
+  .data-list {
+    border-top: 1px solid var(--ink);
+    margin-top: 12px;
+  }
+  .data-row {
+    display: grid;
+    grid-template-columns: 100px 1fr auto;
+    gap: 24px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: baseline;
+  }
+  .data-when {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-softer);
+    letter-spacing: 0.03em;
+    padding-top: 4px;
+  }
+  .data-what {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  .data-what .role {
+    font-weight: 600;
+    display: block;
+  }
+  .data-what .org {
+    color: var(--ink-soft);
+    font-size: 14px;
+    margin-top: 2px;
+  }
+  .data-what .desc {
+    color: var(--ink-soft);
+    font-size: 14px;
+    margin-top: 6px;
+    max-width: 520px;
+  }
+  .data-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-softer);
+    padding: 4px 8px;
+    border: 1px solid var(--rule);
+    white-space: nowrap;
+  }
+
+  .skills-prose {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--ink);
+    max-width: 640px;
+  }
+  .skills-prose .chip {
+    display: inline;
+    border-bottom: 1px dotted var(--ink-softer);
+    cursor: help;
+  }
+  .skills-prose .chip:hover {
+    border-bottom-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .stats-grid {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+  .stat {
+    background: var(--paper);
+    padding: 28px 24px;
+  }
+  .stat-num {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .stat-num em {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    color: var(--accent);
+  }
+  .stat-label {
+    margin-top: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-softer);
+  }
+  .stat-note {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+
+  /* ─── RESUME ───────────────────────────── */
+  .resume {
+    padding-top: 80px;
+    padding-bottom: 120px;
+  }
+  .resume-hero {
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 48px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 32px;
+  }
+  .resume-hero h1 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: clamp(48px, 6vw, 84px);
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+    margin-top: 16px;
+  }
+  .resume-hero h1 em {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 22px;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .download-btn:hover { background: var(--accent); }
+  .download-btn .arrow { font-size: 14px; }
+
+  .pitch {
+    margin-top: 80px;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 64px;
+  }
+  .pitch-body {
+    max-width: 640px;
+  }
+  .pitch-body p {
+    font-size: 17px;
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  .pitch-body p:first-child::first-letter {
+    font-family: 'Fraunces', serif;
+    font-size: 56px;
+    line-height: 0.85;
+    float: left;
+    margin: 6px 12px 0 0;
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .pitch-body .reason {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-softer);
+    margin-top: 32px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .preview-block {
+    margin-top: 96px;
+  }
+  .preview-frame {
+    margin-top: 24px;
+    border: 1px solid var(--rule);
+    background: var(--paper-2);
+    padding: 48px;
+    display: grid;
+    place-items: center;
+    min-height: 420px;
+    position: relative;
+  }
+  .preview-frame .doc-mock {
+    width: 100%;
+    max-width: 480px;
+    aspect-ratio: 8.5/11;
+    background: white;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.06);
+    padding: 40px 36px;
+    font-size: 8px;
+    line-height: 1.4;
+    color: #333;
+    position: relative;
+  }
+  .doc-mock .doc-name {
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: -0.01em;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+  .doc-mock .doc-sub {
+    text-align: center;
+    font-size: 7px;
+    color: #888;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .doc-mock .doc-section {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 12px 0 4px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 2px;
+  }
+  .doc-mock .doc-line {
+    height: 4px;
+    background: #ddd;
+    margin: 3px 0;
+  }
+  .doc-mock .doc-line.short { width: 60%; }
+  .doc-mock .doc-line.medium { width: 85%; }
+  .doc-mock .doc-bullet {
+    padding-left: 8px;
+    position: relative;
+  }
+  .doc-mock .doc-bullet::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    color: #999;
+  }
+
+  .resume-summary {
+    margin-top: 96px;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 64px;
+    align-items: start;
+  }
+
+  /* ─── CONTACT ──────────────────────────── */
+  .contact {
+    padding-top: 80px;
+    padding-bottom: 120px;
+  }
+  .contact-hero {
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 56px;
+  }
+  .contact-hero h1 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: clamp(64px, 8vw, 112px);
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    margin-top: 16px;
+  }
+  .contact-hero h1 em {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    color: var(--accent);
+  }
+  .contact-hero .lead {
+    margin-top: 28px;
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 580px;
+  }
+  .contact-hero .lead strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .contact-grid {
+    margin-top: 64px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+  }
+  .contact-card {
+    border-top: 1px solid var(--ink);
+    padding-top: 24px;
+  }
+  .contact-card h3 {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+  .contact-card h3 em {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    color: var(--accent);
+  }
+  .contact-card .desc {
+    font-size: 15px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    margin-bottom: 24px;
+  }
+  .contact-card .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .contact-card .cta:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .contact-card .meta {
+    display: block;
+    margin-top: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-softer);
+    letter-spacing: 0.04em;
+  }
+
+  .channels {
+    margin-top: 80px;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 64px;
+  }
+  .channels-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin-top: 16px;
+  }
+  .channel {
+    background: var(--paper);
+    padding: 22px 24px;
+    cursor: pointer;
+    transition: background 0.15s;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+  .channel:hover { background: var(--paper-2); }
+  .channel:hover .channel-arrow { color: var(--accent); transform: translate(2px, -2px); }
+  .channel-name {
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .channel-handle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-softer);
+    margin-top: 2px;
+    letter-spacing: 0.02em;
+  }
+  .channel-arrow {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--ink-soft);
+    transition: transform 0.2s, color 0.2s;
+  }
+
+  .promise {
+    margin-top: 96px;
+    padding: 32px;
+    background: var(--paper-2);
+    border-left: 2px solid var(--accent);
+    max-width: 720px;
+  }
+  .promise .label-inline {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .promise p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+  .promise p em {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+  }
+
+  /* ─── Footer ───────────────────────────── */
+  footer.site {
+    border-top: 1px solid var(--rule);
+    margin-top: 0;
+    padding: 48px 32px 56px;
+    position: relative;
+    z-index: 2;
+  }
+  .footer-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: end;
+    gap: 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--ink-softer);
+    text-transform: uppercase;
+  }
+  .footer-mark {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .footer-mark .big {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+    text-transform: none;
+  }
+  .footer-center {
+    text-align: center;
+    line-height: 1.6;
+  }
+  .footer-right {
+    text-align: right;
+  }
+
+  /* ─── Palette Switcher ─────────────────── */
+  .palette-switcher {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 200;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.06);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-softer);
+  }
+  .palette-switcher .ps-label {
+    border-right: 1px solid var(--rule);
+    padding-right: 10px;
+  }
+  .palette-switcher .swatches {
+    display: flex;
+    gap: 6px;
+  }
+  .swatch {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 1px solid rgba(0,0,0,0.08);
+    transition: transform 0.15s, box-shadow 0.15s;
+    position: relative;
+  }
+  .swatch:hover { transform: scale(1.12); }
+  .swatch.active { box-shadow: 0 0 0 2px var(--ink), 0 0 0 3px var(--paper); }
+  .swatch[data-pal="fog"]   { background: linear-gradient(135deg, #F6F6F7 50%, #1F4DDA 50%); }
+  .swatch[data-pal="white"] { background: linear-gradient(135deg, #FFFFFF 50%, #000000 50%); border-color: rgba(0,0,0,0.15); }
+  .swatch[data-pal="paper"] { background: linear-gradient(135deg, #F4F1E8 50%, #B5462A 50%); }
+  .swatch[data-pal="ink"]   { background: linear-gradient(135deg, #16161A 50%, #E07650 50%); border-color: rgba(255,255,255,0.15); }
+
+  @media (max-width: 600px) {
+    .palette-switcher { bottom: 12px; right: 12px; padding: 8px; }
+    .palette-switcher .ps-label { display: none; }
+  }
+
+  /* ─── Responsive ───────────────────────── */
+  @media (max-width: 880px) {
+    .header-inner { grid-template-columns: auto 1fr; gap: 16px; padding: 14px 20px; }
+    .header-meta { display: none; }
+    nav.primary { gap: 0; }
+    nav.primary a { padding: 8px 8px; font-size: 11px; }
+    .page { padding: 0 20px; }
+    .home, .about, .resume, .contact { padding-top: 56px; padding-bottom: 80px; }
+    .home-grid, .about-hero, .story, .data-block, .pitch, .resume-summary, .channels {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    .resume-hero { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .contact-grid { grid-template-columns: 1fr; gap: 32px; }
+    .channels-grid { grid-template-columns: 1fr; }
+    .footer-inner { grid-template-columns: 1fr; text-align: left; gap: 16px; }
+    .footer-center, .footer-right { text-align: left; }
+    .data-row { grid-template-columns: 1fr; gap: 8px; }
+    .data-tag { justify-self: start; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="header-inner">
+    <a class="logo" data-route="home">
+      <span class="logo-mark">SD</span>
+      <span>sandip.dev</span>
+    </a>
+    <nav class="primary">
+      <a data-route="home">home</a>
+      <a data-route="about">about</a>
+      <a data-route="resume">work</a>
+      <a data-route="contact">contact</a>
+    </nav>
+    <div class="header-meta">
+      <span class="status-dot"></span>
+      <span id="status-text">available · dallas, tx</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ═══════════════ HOME ═══════════════ -->
+<section class="page home active" data-page="home">
+  <div class="home-grid">
+    <div>
+      <div class="label">// product builder, est. 2012</div>
+      <h1>Sandip <span class="amp">Dev</span>.</h1>
+      <p class="tagline">
+        I turn coffee into <em>shipped products</em> — and the occasional spreadsheet so dense it has its own gravity.
+      </p>
+      <p class="sub">
+        Senior Product Manager. Ex-Amazon. IIM Ahmedabad. Currently in Dallas, formerly Bangalore, Seattle, and at least three coffee shops you've never heard of.
+      </p>
+
+      <div class="links-block">
+        <div class="label">// elsewhere on the internet</div>
+        <div class="links-list">
+          <div class="link-row">
+            <span class="link-num">01</span>
+            <span class="link-name">LinkedIn</span>
+            <span class="link-meta">professional, mostly</span>
+            <span class="link-arrow">→</span>
+          </div>
+          <div class="link-row">
+            <span class="link-num">02</span>
+            <span class="link-name">Medium</span>
+            <span class="link-meta">half-baked, half-good</span>
+            <span class="link-arrow">→</span>
+          </div>
+          <div class="link-row">
+            <span class="link-num">03</span>
+            <span class="link-name">GitHub</span>
+            <span class="link-meta">code, also evidence</span>
+            <span class="link-arrow">→</span>
+          </div>
+          <div class="link-row">
+            <span class="link-num">04</span>
+            <span class="link-name">Apps & hobby projects</span>
+            <span class="link-meta">things I built on weekends</span>
+            <span class="link-arrow">→</span>
+          </div>
+          <div class="link-row">
+            <span class="link-num">05</span>
+            <span class="link-name">Blog</span>
+            <span class="link-meta">long-form thinking, slowly</span>
+            <span class="link-arrow">→</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside>
+      <div class="sidebar-card">
+        <div class="label no-rule">// currently</div>
+        <div class="currently-list">
+          <div class="currently-row">
+            <span class="currently-key">reading</span>
+            <span class="currently-val"><em>The Goal</em>, again. It keeps holding up.</span>
+          </div>
+          <div class="currently-row">
+            <span class="currently-key">building</span>
+            <span class="currently-val">A small tool that tells me when my SQL is lying.</span>
+          </div>
+          <div class="currently-row">
+            <span class="currently-key">drinking</span>
+            <span class="currently-val">Oat-milk cortado. Don't @ me.</span>
+          </div>
+          <div class="currently-row">
+            <span class="currently-key">thinking</span>
+            <span class="currently-val">About why most dashboards lie politely.</span>
+          </div>
+          <div class="currently-row">
+            <span class="currently-key">avoiding</span>
+            <span class="currently-val">Open-plan offices. Always.</span>
+          </div>
+        </div>
+        <div class="footnote">
+          Updated occasionally.<br>
+          Last touched: this week.
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ═══════════════ ABOUT ═══════════════ -->
+<section class="page about" data-page="about">
+  <div class="about-hero">
+    <div>
+      <div class="label">// about</div>
+      <h1>Mostly product. <em>Some opinions.</em></h1>
+      <p class="lead">
+        I'm a Product Manager. I've spent thirteen years figuring out what people actually want versus what they say they want — and the gap, it turns out, is where all the interesting work happens.
+      </p>
+    </div>
+    <div class="portrait"></div>
+  </div>
+
+  <div class="story">
+    <div class="label">// the story</div>
+    <div class="story-body">
+      <p>
+        I grew up taking things apart and not always putting them back together correctly. That impulse hasn't really gone away — only the things have changed: <span class="marker">first toys, then code, now supply chains and ML systems</span> at planetary scale.
+      </p>
+      <p>
+        At Amazon I led the global product charter for country-level network planning, which is a fancy way of saying I helped figure out where things should go, when, and why. The numbers got large. <strong>$700M in free cash flow saved in 2024</strong>, an 80% drop in workflow errors, a 30%+ jump in delivery satisfaction across UAE, KSA, SA, and AU. None of it happened because I'm clever. All of it happened because I listened — to operators, to data, to the unglamorous parts of the business that nobody puts on slides.
+      </p>
+      <p class="pullquote">
+        I'm not flashy. I'm not going viral on LinkedIn. But I ship. I fix broken things. And I make sense of the mess, with just enough sarcasm to stay sane.
+      </p>
+      <p>
+        I went to IIM Ahmedabad for an MBA, and NIT Surat before that for engineering. I prefer a clean desk to a mood board, a quiet room to a war room, and a strong opinion held loosely to either. I'm based in Dallas, with regular detours to Bangalore. I read more than I post. I write more than I publish.
+      </p>
+    </div>
+  </div>
+
+  <div class="data-block">
+    <div class="label">// work</div>
+    <div>
+      <div class="data-list">
+        <div class="data-row">
+          <span class="data-when">2022 — 2025</span>
+          <div class="data-what">
+            <span class="role">Senior Product Manager, Supply Chain Optimization Tech</span>
+            <span class="org">Amazon · Seattle</span>
+            <span class="desc">Led the global product charter for country-level network planning. Delivered $700M in free cash flow savings via ML-driven inventory optimization, capacity modeling, and anomaly detection.</span>
+          </div>
+          <span class="data-tag">amazon</span>
+        </div>
+        <div class="data-row">
+          <span class="data-when">2021 — 2022</span>
+          <div class="data-what">
+            <span class="role">Senior Program Manager, Global Store</span>
+            <span class="org">Amazon · Seattle</span>
+            <span class="desc">Owned Delivery Excellence across AU, UAE, SA, SG. Boosted CSAT 30%+ during Black Friday by surfacing real-time shipment issues across systems.</span>
+          </div>
+          <span class="data-tag">amazon</span>
+        </div>
+        <div class="data-row">
+          <span class="data-when">2021</span>
+          <div class="data-what">
+            <span class="role">Senior Program Manager, Operational Excellence</span>
+            <span class="org">Amazon · Bangalore</span>
+            <span class="desc">Built a loss-bridge framework that surfaced major loss drivers; reduced non-refundable concessions from 10% to 2%.</span>
+          </div>
+          <span class="data-tag">amazon</span>
+        </div>
+        <div class="data-row">
+          <span class="data-when">2019 — 2021</span>
+          <div class="data-what">
+            <span class="role">Program Manager II, Operational Excellence</span>
+            <span class="org">Amazon · Bangalore</span>
+            <span class="desc">Built an $8.2M/year profitability engine — solo. Drove alignment across finance, category, and vendor teams.</span>
+          </div>
+          <span class="data-tag">amazon</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="data-block">
+    <div class="label">// school</div>
+    <div>
+      <div class="data-list">
+        <div class="data-row">
+          <span class="data-when">2010 — 2012</span>
+          <div class="data-what">
+            <span class="role">MBA</span>
+            <span class="org">Indian Institute of Management, Ahmedabad</span>
+          </div>
+          <span class="data-tag">iim-a</span>
+        </div>
+        <div class="data-row">
+          <span class="data-when">2006 — 2010</span>
+          <div class="data-what">
+            <span class="role">B.Tech, Computer Engineering</span>
+            <span class="org">National Institute of Technology, Surat</span>
+          </div>
+          <span class="data-tag">nit</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="data-block">
+    <div class="label">// what I do</div>
+    <div>
+      <p class="skills-prose">
+        Day-to-day I do <span class="chip">product strategy</span>, <span class="chip">roadmaps</span>, <span class="chip">ML strategy</span>, <span class="chip">capacity modeling</span>, and <span class="chip">anomaly detection</span>. I'm comfortable in <span class="chip">SQL</span>, fluent in <span class="chip">Python</span>, and on speaking terms with <span class="chip">cross-functional politics</span>. I write <span class="chip">specs</span> people can read on the bus, run <span class="chip">user research</span> that doesn't bore the participant, and translate between <span class="chip">engineers, finance, and ops</span> without losing the plot.
+      </p>
+
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="stat-num">$700<em>M</em></div>
+          <div class="stat-label">FCF saved · 2024</div>
+          <div class="stat-note">via ML-driven inventory optimization</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">30<em>%+</em></div>
+          <div class="stat-label">CSAT lift · 21–22</div>
+          <div class="stat-note">across AU, UAE, SA, SG markets</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">80<em>%</em></div>
+          <div class="stat-label">Fraud reduced · 21</div>
+          <div class="stat-note">10% → 2% via anomaly models</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">₹20<em>Cr</em></div>
+          <div class="stat-label">Monthly savings · 21</div>
+          <div class="stat-note">return-pattern analysis, India ops</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">9<em>+</em></div>
+          <div class="stat-label">Countries · 22–25</div>
+          <div class="stat-note">global product charter</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">1.2<em>d</em></div>
+          <div class="stat-label">Delivery cut · 21–22</div>
+          <div class="stat-note">UAE/KSA, while reducing cost 12%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ RESUME ═══════════════ -->
+<section class="page resume" data-page="resume">
+  <div class="resume-hero">
+    <div>
+      <div class="label">// the formal version</div>
+      <h1>Resume.</h1>
+    </div>
+    <a class="download-btn">
+      <span>Download PDF</span>
+      <span class="arrow">↓</span>
+    </a>
+  </div>
+
+  <div class="pitch">
+    <div class="label">// why we'd work well together</div>
+    <div class="pitch-body">
+      <p>
+        I listen to customers. Mostly because guessing hasn't worked out great for humanity. Turns out, if you talk to people and actually care about what they're struggling with, they'll tell you how to build something useful. Wild concept.
+      </p>
+
+      <span class="reason">— reason #2 —</span>
+      <p>
+        I turn data into insight, and insight into action. Not always on the first try, but eventually — usually after I've triple-checked my SQL joins, questioned my life choices, and had a minor existential crisis over a missing semicolon.
+      </p>
+
+      <span class="reason">— reason #3 —</span>
+      <p>
+        Give me a few gigabytes of chaotic data, a strong cup of coffee or five, and some room to pace around mumbling things like "this makes no sense," and I'll dig up patterns, problems, and opportunities you didn't know existed.
+      </p>
+
+      <span class="reason">— in short —</span>
+      <p>
+        I'm not flashy. I'm not going viral on LinkedIn. But I ship. I fix broken things. And I make sense of the mess, with just enough sarcasm to stay sane.
+      </p>
+    </div>
+  </div>
+
+  <div class="preview-block">
+    <div class="label">// preview</div>
+    <div class="preview-frame">
+      <div class="doc-mock">
+        <div class="doc-name">SANDIP DEV</div>
+        <div class="doc-sub">Senior PM · Ex-Amazon · IIM-A · $1.3B saved in 2024</div>
+
+        <div class="doc-section">Professional Summary</div>
+        <div class="doc-line medium"></div>
+        <div class="doc-line"></div>
+        <div class="doc-line short"></div>
+
+        <div class="doc-section">Education</div>
+        <div class="doc-line medium"></div>
+        <div class="doc-line short"></div>
+
+        <div class="doc-section">Work Experience</div>
+        <div class="doc-line"></div>
+        <div class="doc-bullet"><div class="doc-line medium"></div></div>
+        <div class="doc-bullet"><div class="doc-line"></div></div>
+        <div class="doc-bullet"><div class="doc-line medium"></div></div>
+        <div class="doc-line"></div>
+        <div class="doc-bullet"><div class="doc-line"></div></div>
+        <div class="doc-bullet"><div class="doc-line short"></div></div>
+
+        <div class="doc-section">Skills</div>
+        <div class="doc-line"></div>
+        <div class="doc-line short"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="resume-summary">
+    <div class="label">// summary</div>
+    <div>
+      <p style="font-size:17px; line-height:1.7; color: var(--ink-soft); max-width: 640px;">
+        Thirteen years building products. Four at Amazon as a Senior PM/PM. Two business degrees, one MBA. A handful of large numbers attached to my name. Available for the right kind of problem — preferably one that's been sitting on someone's desk for too long.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CONTACT ═══════════════ -->
+<section class="page contact" data-page="contact">
+  <div class="contact-hero">
+    <div class="label">// say hi</div>
+    <h1>Let's <em>talk</em>.</h1>
+    <p class="lead">
+      <strong>Email is best.</strong> Calendar second. Forms last. (There's one further down, but only if you insist — I prefer the version where you just write to me like a person.)
+    </p>
+  </div>
+
+  <div class="contact-grid">
+    <div class="contact-card">
+      <h3>Coffee chat <em>—</em> 30 minutes</h3>
+      <p class="desc">
+        Virtual. Free. Bring an idea, a problem, or just curiosity. I'll bring questions and possibly the second pour. Best for: brainstorming, gut-checks, "should I do this?" conversations.
+      </p>
+      <span class="cta">Book a slot →</span>
+      <span class="meta">// virtual · 30 min · usually within the week</span>
+    </div>
+
+    <div class="contact-card">
+      <h3>Ask for a <em>referral</em></h3>
+      <p class="desc">
+        I'll happily refer qualified candidates to my employer or to people in my network — provided your background actually matches the role. Send me your details, give me 48 hours, and I'll get back to you either way.
+      </p>
+      <span class="cta">Send your details →</span>
+      <span class="meta">// reply within 48h · honest yes/no</span>
+    </div>
+  </div>
+
+  <div class="channels">
+    <div class="label">// every other way to reach me</div>
+    <div>
+      <div class="channels-grid">
+        <div class="channel">
+          <div>
+            <div class="channel-name">Email</div>
+            <div class="channel-handle">me@sandip.dev</div>
+          </div>
+          <span class="channel-arrow">↗</span>
+        </div>
+        <div class="channel">
+          <div>
+            <div class="channel-name">LinkedIn</div>
+            <div class="channel-handle">/in/sandipdev</div>
+          </div>
+          <span class="channel-arrow">↗</span>
+        </div>
+        <div class="channel">
+          <div>
+            <div class="channel-name">GitHub</div>
+            <div class="channel-handle">@sandipdev</div>
+          </div>
+          <span class="channel-arrow">↗</span>
+        </div>
+        <div class="channel">
+          <div>
+            <div class="channel-name">X (Twitter)</div>
+            <div class="channel-handle">@sandipdev · rarely</div>
+          </div>
+          <span class="channel-arrow">↗</span>
+        </div>
+        <div class="channel">
+          <div>
+            <div class="channel-name">Medium</div>
+            <div class="channel-handle">@sandipdev · slowly</div>
+          </div>
+          <span class="channel-arrow">↗</span>
+        </div>
+        <div class="channel">
+          <div>
+            <div class="channel-name">Phone</div>
+            <div class="channel-handle">on request · for urgent things</div>
+          </div>
+          <span class="channel-arrow">↗</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="promise">
+    <div class="label-inline">// the promise</div>
+    <p>
+      I read every email. I reply to most within 24 hours. <em>If I haven't replied in 72</em>, it means your message either fell into a folder it shouldn't have, or I'm thinking about it carefully — feel free to nudge.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer class="site">
+  <div class="footer-inner">
+    <div class="footer-mark">
+      <span class="big">Sandip Dev</span>
+      <span>© 2026 · made quietly</span>
+    </div>
+    <div class="footer-center">
+      Dallas, TX · 32.78°N 96.80°W<br>
+      <span id="local-time">— : — local</span>
+    </div>
+    <div class="footer-right">
+      v.4 · last edit, this week<br>
+      no cookies. no trackers. no ads.
+    </div>
+  </div>
+</footer>
+
+<div class="palette-switcher">
+  <span class="ps-label">// palette</span>
+  <div class="swatches">
+    <span class="swatch active" data-pal="fog"   title="Cool Fog · Linear-ish"></span>
+    <span class="swatch"        data-pal="white" title="True White · Vercel docs"></span>
+    <span class="swatch"        data-pal="paper" title="Warm Paper · the cream I shipped first"></span>
+    <span class="swatch"        data-pal="ink"   title="Dark / Ink"></span>
+  </div>
+</div>
+
+<script>
+  // ─── Routing ──────────────────────────
+  const routes = ['home', 'about', 'resume', 'contact'];
+
+  function showPage(name) {
+    if (!routes.includes(name)) name = 'home';
+    document.querySelectorAll('.page').forEach(p => {
+      p.classList.toggle('active', p.dataset.page === name);
+    });
+    document.querySelectorAll('nav.primary a, .logo').forEach(a => {
+      a.classList.toggle('active', a.dataset.route === name);
+    });
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    if (location.hash !== '#/' + name) {
+      history.replaceState(null, '', '#/' + name);
+    }
+  }
+
+  document.querySelectorAll('[data-route]').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      showPage(el.dataset.route);
+    });
+  });
+
+  // initial
+  const initial = (location.hash || '#/home').replace('#/', '');
+  showPage(initial);
+
+  // ─── Palette switcher ─────────────────
+  const swatches = document.querySelectorAll('.swatch');
+  swatches.forEach(s => {
+    s.addEventListener('click', () => {
+      const pal = s.dataset.pal;
+      document.documentElement.setAttribute('data-theme', pal);
+      swatches.forEach(x => x.classList.toggle('active', x === s));
+      try { localStorage.setItem('sd-palette', pal); } catch(e) {}
+    });
+  });
+  try {
+    const saved = localStorage.getItem('sd-palette');
+    if (saved) {
+      document.documentElement.setAttribute('data-theme', saved);
+      swatches.forEach(x => x.classList.toggle('active', x.dataset.pal === saved));
+    }
+  } catch(e) {}
+
+  // ─── Local time in footer ─────────────
+  function updateTime() {
+    const t = new Date().toLocaleTimeString('en-US', {
+      hour: '2-digit', minute: '2-digit',
+      timeZone: 'America/Chicago', hour12: false
+    });
+    document.getElementById('local-time').textContent = t + ' local';
+  }
+  updateTime();
+  setInterval(updateTime, 30000);
+</script>
+
+</body>
+</html>
