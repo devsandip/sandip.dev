@@ -1,0 +1,6 @@
+.DS_Store
+infra/.aws-sam/
+infra/samconfig.toml
+*.log
+.env
+.env.*

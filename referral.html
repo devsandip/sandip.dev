@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referral & Networking — Sandip Dev</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet">
+<style>
+  :root, [data-theme="fog"] {
+    --paper: #F6F6F7;
+    --paper-2: #EFEFF1;
+    --ink: #0A0A0B;
+    --ink-soft: #4A4A52;
+    --ink-softer: #8A8A92;
+    --rule: #E2E2E5;
+    --rule-soft: #ECECEF;
+    --accent: #1F4DDA;
+    --accent-soft: rgba(31, 77, 218, 0.08);
+    --error: #C03030;
+    --warn: #B5762A;
+    --ok: #2E7D4F;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  a { color: inherit; text-decoration: none; }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+  header.site {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+  }
+  .header-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 18px 32px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 32px;
+  }
+  .logo {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+  .logo-mark {
+    width: 22px; height: 22px;
+    background: var(--ink);
+    color: var(--paper);
+    display: grid; place-items: center;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  nav.primary {
+    display: flex;
+    gap: 4px;
+    justify-content: flex-end;
+  }
+  nav.primary a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: lowercase;
+    padding: 8px 14px;
+    color: var(--ink-soft);
+    transition: color 0.15s;
+  }
+  nav.primary a:hover { color: var(--ink); }
+  nav.primary a.active { color: var(--ink); }
+
+  main { max-width: 880px; margin: 0 auto; padding: 32px 32px 80px; }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 32px;
+    cursor: pointer;
+  }
+  .back-link:hover { color: var(--accent); }
+
+  .hero { text-align: center; padding: 24px 0 48px; }
+  .hero-icon {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent);
+    display: inline-grid; place-items: center;
+    margin-bottom: 20px;
+    font-size: 22px;
+  }
+  .hero h1 {
+    font-weight: 800;
+    font-size: clamp(36px, 5vw, 56px);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+  .hero h1 em {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    color: var(--accent);
+  }
+  .hero p {
+    margin: 18px auto 0;
+    max-width: 580px;
+    color: var(--ink-soft);
+    font-size: 16px;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .info-card {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    padding: 18px 16px;
+    text-align: center;
+  }
+  .info-card .ic {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    display: inline-grid; place-items: center;
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+  .info-card h4 { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .info-card p { font-size: 11.5px; color: var(--ink-softer); line-height: 1.4; }
+
+  form.req {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    padding: 32px;
+  }
+  form.req h2 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 24px;
+  }
+  .section {
+    border-top: 1px solid var(--rule);
+    padding-top: 22px;
+    margin-top: 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .section:first-of-type { border-top: 0; padding-top: 0; margin-top: 0; }
+  .section-h {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 15px; font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .section-h .ic-sm {
+    color: var(--accent);
+    font-size: 16px;
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .grid-phone { display: grid; grid-template-columns: 140px 1fr; gap: 10px; }
+
+  .field label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--ink);
+  }
+  .field label .req-star { color: var(--error); }
+  .field input[type="text"],
+  .field input[type="email"],
+  .field input[type="url"],
+  .field input[type="tel"],
+  .field select,
+  .field textarea {
+    width: 100%;
+    padding: 11px 12px;
+    background: var(--paper-2);
+    border: 1px solid transparent;
+    border-radius: 0;
+    font: inherit;
+    font-size: 14px;
+    color: var(--ink);
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: var(--paper);
+  }
+  .field textarea { min-height: 130px; resize: vertical; font-family: inherit; }
+  .field .help {
+    margin-top: 6px;
+    font-size: 11.5px;
+    color: var(--ink-softer);
+    line-height: 1.4;
+  }
+  .field .err {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--error);
+    display: none;
+  }
+  .field .warn-msg {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--warn);
+    display: none;
+  }
+  .field.invalid input,
+  .field.invalid select,
+  .field.invalid textarea { border-color: var(--error); background: rgba(192,48,48,0.04); }
+  .field.invalid .err { display: block; }
+  .field.warn .warn-msg { display: block; }
+  .field.checking input { background-image: linear-gradient(90deg, transparent 0%, rgba(31,77,218,0.06) 50%, transparent 100%); background-size: 200% 100%; animation: shimmer 1.2s linear infinite; }
+  @keyframes shimmer { from{background-position:200% 0;} to{background-position:-200% 0;} }
+
+  .radio-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .radio-card {
+    border: 1px solid var(--rule);
+    padding: 16px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .radio-card:hover { border-color: var(--accent); }
+  .radio-card.selected { border-color: var(--accent); background: var(--accent-soft); }
+  .radio-card input { display: none; }
+  .radio-card .rc-h { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; }
+  .radio-card .rc-d { font-size: 12px; color: var(--ink-softer); line-height: 1.4; }
+  .radio-card .rc-h .ic-sm { color: var(--accent); }
+
+  .note {
+    background: var(--paper-2);
+    padding: 16px 18px;
+    margin-top: 26px;
+    border-left: 2px solid var(--accent);
+    font-size: 13px;
+  }
+  .note h5 { font-size: 13px; margin-bottom: 8px; }
+  .note ul { padding-left: 18px; color: var(--ink-soft); }
+  .note ul li { margin-bottom: 3px; }
+
+  .submit {
+    margin-top: 24px;
+    width: 100%;
+    padding: 16px;
+    background: var(--accent);
+    color: white;
+    border: 0;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition: background 0.15s, opacity 0.15s;
+  }
+  .submit:hover:not(:disabled) { background: #1A3FB8; }
+  .submit:disabled { opacity: 0.5; cursor: not-allowed; }
+  .submit-status {
+    margin-top: 12px;
+    font-size: 13px;
+    text-align: center;
+    color: var(--ink-soft);
+    min-height: 18px;
+  }
+  .submit-status.error { color: var(--error); }
+  .submit-status.ok { color: var(--ok); }
+
+  .success-card {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--ok);
+    padding: 32px;
+    text-align: center;
+    display: none;
+  }
+  .success-card.show { display: block; }
+  .success-card h2 { font-size: 24px; margin-bottom: 12px; }
+  .success-card p { color: var(--ink-soft); margin-bottom: 16px; }
+  .success-card .url-box {
+    background: var(--paper-2);
+    padding: 14px;
+    margin: 18px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    word-break: break-all;
+    border: 1px solid var(--rule);
+  }
+  .success-card .copy-btn {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 10px 18px;
+    border: 0;
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  footer.site {
+    border-top: 1px solid var(--rule);
+    padding: 32px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-softer);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  @media (max-width: 720px) {
+    .info-grid { grid-template-columns: repeat(2, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
+    .radio-row { grid-template-columns: 1fr; }
+    main { padding: 24px 20px 60px; }
+    form.req { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="header-inner">
+    <a class="logo" href="index.html">
+      <span class="logo-mark">SD</span>
+      <span>sandip.dev</span>
+    </a>
+    <nav class="primary">
+      <a href="index.html#/home">home</a>
+      <a href="index.html#/about">about</a>
+      <a href="index.html#/resume">resume</a>
+      <a href="index.html#/contact" class="active">contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <a class="back-link" href="index.html#/contact">← Back to Contact</a>
+
+  <div class="hero">
+    <div class="hero-icon">⚐</div>
+    <h1>Referral &amp; <em>Networking</em></h1>
+    <p>Looking to join Amazon or need an introduction to someone in my network? I'm happy to help qualified candidates connect with the right opportunities.</p>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-card"><div class="ic">▤</div><h4>Complete Profile</h4><p>Make sure your LinkedIn is up-to-date with relevant experience.</p></div>
+    <div class="info-card"><div class="ic">★</div><h4>Relevant Experience</h4><p>Highlight experience that aligns with the target role.</p></div>
+    <div class="info-card"><div class="ic">⌕</div><h4>Research the Role</h4><p>Understand the job requirements before requesting.</p></div>
+    <div class="info-card"><div class="ic">✓</div><h4>Be Specific</h4><p>Clearly explain why you're a strong candidate.</p></div>
+  </div>
+
+  <div id="form-wrap">
+    <form class="req" id="referral-form" novalidate>
+      <h2>Request Form</h2>
+
+      <div class="section">
+        <div class="section-h"><span class="ic-sm">◐</span>What do you need?</div>
+        <div class="radio-row">
+          <label class="radio-card selected" data-val="direct">
+            <input type="radio" name="request_type" value="direct" checked>
+            <div class="rc-h"><span class="ic-sm">→</span>Direct Referral</div>
+            <div class="rc-d">I can refer you directly to Amazon or companies where I work / have worked.</div>
+          </label>
+          <label class="radio-card" data-val="network">
+            <input type="radio" name="request_type" value="network">
+            <div class="rc-h"><span class="ic-sm">⇄</span>Network Connection</div>
+            <div class="rc-d">I'll connect you with someone in my network who works at your target company.</div>
+          </label>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-h"><span class="ic-sm">●</span>About You</div>
+        <div class="field" data-validate="name">
+          <label>Full Name <span class="req-star">*</span></label>
+          <input type="text" name="full_name" autocomplete="name" maxlength="80">
+          <div class="err"></div>
+        </div>
+        <div class="field" data-validate="linkedin">
+          <label>LinkedIn Profile URL <span class="req-star">*</span></label>
+          <input type="url" name="linkedin_url" placeholder="https://linkedin.com/in/yourprofile" autocomplete="url">
+          <div class="help">We'll verify the profile exists before you submit.</div>
+          <div class="err"></div>
+        </div>
+        <div class="field" data-validate="experience">
+          <label>Years of Relevant Experience <span class="req-star">*</span></label>
+          <select name="experience">
+            <option value="">Select experience</option>
+            <option value="0-1">0–1 years</option>
+            <option value="2-3">2–3 years</option>
+            <option value="4-6">4–6 years</option>
+            <option value="7-10">7–10 years</option>
+            <option value="11-15">11–15 years</option>
+            <option value="15+">15+ years</option>
+          </select>
+          <div class="err"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-h"><span class="ic-sm">◎</span>About the Role</div>
+        <div class="grid-2">
+          <div class="field" data-validate="company">
+            <label>Target Company <span class="req-star">*</span></label>
+            <input type="text" name="target_company" placeholder="e.g., Amazon, Google, Microsoft" maxlength="80">
+            <div class="err"></div>
+          </div>
+          <div class="field" data-validate="role">
+            <label>Target Role / Position <span class="req-star">*</span></label>
+            <input type="text" name="target_role" placeholder="e.g., Senior Product Manager" maxlength="120">
+            <div class="err"></div>
+          </div>
+        </div>
+        <div class="field" data-validate="job_url">
+          <label>Job Posting URL <span class="req-star">*</span></label>
+          <input type="url" name="job_url" placeholder="https://www.amazon.jobs/en/jobs/...">
+          <div class="help">Best paste the direct link to the job posting.</div>
+          <div class="err"></div>
+          <div class="warn-msg"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-h"><span class="ic-sm">✦</span>Why You?</div>
+        <div class="field" data-validate="why">
+          <label>Why are you a good fit for this role? <span class="req-star">*</span></label>
+          <textarea name="why" placeholder="Briefly describe your relevant skills, experience, and why you're interested in this role..." maxlength="2000"></textarea>
+          <div class="help"><span id="why-count">0</span> / 2000 · minimum 150 characters · please write in your own words</div>
+          <div class="err"></div>
+          <div class="warn-msg"></div>
+        </div>
+        <div class="field" data-validate="resume">
+          <label>Share your resume <span class="req-star">*</span></label>
+          <input type="url" name="resume_url" placeholder="Google Docs / OneDrive / Dropbox URL">
+          <div class="help">Upload your resume (PDF or Word) to Google Drive / OneDrive / Dropbox and share a public link. We'll check the link is publicly accessible.</div>
+          <div class="err"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-h"><span class="ic-sm">✉</span>Your Contact Details</div>
+        <div class="field" data-validate="email">
+          <label>Email Address <span class="req-star">*</span></label>
+          <input type="email" name="email" placeholder="you@example.com" autocomplete="email">
+          <div class="err"></div>
+        </div>
+        <div class="field" data-validate="phone">
+          <label>Phone Number <span class="req-star">*</span></label>
+          <div class="grid-phone">
+            <select name="phone_cc">
+              <option value="">Code</option>
+              <option value="+1">+1 USA / Canada</option>
+              <option value="+91">+91 India</option>
+              <option value="+44">+44 UK</option>
+              <option value="+61">+61 Australia</option>
+              <option value="+971">+971 UAE</option>
+              <option value="+966">+966 Saudi Arabia</option>
+              <option value="+27">+27 South Africa</option>
+              <option value="+65">+65 Singapore</option>
+              <option value="+86">+86 China</option>
+              <option value="+81">+81 Japan</option>
+              <option value="+49">+49 Germany</option>
+              <option value="+33">+33 France</option>
+              <option value="+34">+34 Spain</option>
+              <option value="+39">+39 Italy</option>
+              <option value="+31">+31 Netherlands</option>
+              <option value="+46">+46 Sweden</option>
+              <option value="+47">+47 Norway</option>
+              <option value="+45">+45 Denmark</option>
+              <option value="+41">+41 Switzerland</option>
+              <option value="+353">+353 Ireland</option>
+              <option value="+351">+351 Portugal</option>
+              <option value="+90">+90 Turkey</option>
+              <option value="+972">+972 Israel</option>
+              <option value="+852">+852 Hong Kong</option>
+              <option value="+886">+886 Taiwan</option>
+              <option value="+60">+60 Malaysia</option>
+              <option value="+62">+62 Indonesia</option>
+              <option value="+63">+63 Philippines</option>
+              <option value="+66">+66 Thailand</option>
+              <option value="+84">+84 Vietnam</option>
+              <option value="+55">+55 Brazil</option>
+              <option value="+52">+52 Mexico</option>
+              <option value="+234">+234 Nigeria</option>
+              <option value="+254">+254 Kenya</option>
+              <option value="+20">+20 Egypt</option>
+            </select>
+            <input type="tel" name="phone" placeholder="1234567890" autocomplete="tel-national" maxlength="15">
+          </div>
+          <div class="err"></div>
+        </div>
+      </div>
+
+      <div class="note">
+        <h5>Please note</h5>
+        <ul>
+          <li>I review every referral request personally.</li>
+          <li>Response time is typically 48 hours.</li>
+          <li>I only refer candidates I believe are a strong fit.</li>
+          <li>A referral does not guarantee an interview.</li>
+        </ul>
+      </div>
+
+      <button class="submit" type="submit" id="submit-btn">Submit Referral Request</button>
+      <div class="submit-status" id="submit-status"></div>
+    </form>
+
+    <div class="success-card" id="success-card">
+      <h2>Thank you — request received.</h2>
+      <p>You'll receive a confirmation email shortly. I'll personally review and reply within 48 hours.</p>
+      <p style="margin-top:18px;font-size:14px;"><strong>Save this private link to view your submission anytime:</strong></p>
+      <div class="url-box" id="view-url">—</div>
+      <button class="copy-btn" id="copy-btn">Copy link</button>
+    </div>
+  </div>
+</main>
+
+<footer class="site">
+  © 2026 Sandip Dev · sandip.dev
+</footer>
+
+<script>
+  // ─── API endpoint (filled in after deploy) ─────────────────────
+  const API_URL = window.SANDIP_API_URL || 'https://REPLACE_WITH_API_URL/referral';
+  const VIEW_BASE = window.SANDIP_VIEW_BASE || 'https://REPLACE_WITH_API_URL/r/';
+
+  // ─── Radio cards ───────────────────────────────────────────────
+  document.querySelectorAll('.radio-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      card.querySelector('input').checked = true;
+    });
+  });
+
+  // ─── Why-character counter ─────────────────────────────────────
+  const whyEl = document.querySelector('[name="why"]');
+  const whyCount = document.getElementById('why-count');
+  whyEl.addEventListener('input', () => { whyCount.textContent = whyEl.value.length; });
+
+  // ─── Validators ────────────────────────────────────────────────
+  const KNOWN_JOB_DOMAINS = [
+    'amazon.jobs','jobs.amazon.com','linkedin.com','glassdoor.com','indeed.com',
+    'jobs.lever.co','boards.greenhouse.io','jobs.ashbyhq.com','smartrecruiters.com',
+    'workday','myworkdayjobs.com','careers.google.com','careers.microsoft.com',
+    'metacareers.com','apple.com','careers.netflix.com','jobs.apple.com',
+    'jobs.netflix.com','careers.airbnb.com','stripe.com/jobs','jobs.stripe.com',
+    'careers.uber.com','wellfound.com','angel.co','ycombinator.com'
+  ];
+  const RESUME_DOMAINS = [
+    'docs.google.com','drive.google.com','dropbox.com','onedrive.live.com',
+    '1drv.ms','icloud.com','box.com'
+  ];
+
+  const validators = {
+    name(v) {
+      v = v.trim();
+      if (!v) return 'Required.';
+      if (v.length < 2) return 'Too short.';
+      if (!/^[\p{L}\p{M}'\-\.\s]{2,80}$/u.test(v)) return 'Use letters, spaces, hyphens, apostrophes only.';
+      const words = v.split(/\s+/).filter(Boolean);
+      if (words.length < 2) return 'Please enter your full name (first + last).';
+      return null;
+    },
+    linkedin(v) {
+      v = v.trim();
+      if (!v) return 'Required.';
+      let u; try { u = new URL(v); } catch { return 'Not a valid URL.'; }
+      if (!/^([a-z0-9-]+\.)?linkedin\.com$/i.test(u.hostname)) return 'Must be a linkedin.com URL.';
+      if (!/^\/in\/[A-Za-z0-9\-_%]{3,}\/?$/i.test(u.pathname)) return 'Must look like linkedin.com/in/your-handle.';
+      return null;
+    },
+    experience(v) { return v ? null : 'Required.'; },
+    company(v) {
+      v = v.trim();
+      if (!v) return 'Required.';
+      if (v.length < 2) return 'Too short.';
+      return null;
+    },
+    role(v) {
+      v = v.trim();
+      if (!v) return 'Required.';
+      if (v.length < 2) return 'Too short.';
+      return null;
+    },
+    job_url(v) {
+      v = v.trim();
+      if (!v) return 'Required.';
+      let u; try { u = new URL(v); } catch { return 'Not a valid URL.'; }
+      if (!/^https?:$/.test(u.protocol)) return 'Must be http(s).';
+      return null;
+    },
+    job_url_warn(v) {
+      try {
+        const u = new URL(v);
+        const ok = KNOWN_JOB_DOMAINS.some(d => u.hostname === d || u.hostname.endsWith('.' + d) || u.hostname.includes(d));
+        return ok ? null : 'Heads up — this isn\'t a job board domain I recognize. Submission still allowed.';
+      } catch { return null; }
+    },
+    why(v) {
+      v = v.trim();
+      if (!v) return 'Required.';
+      if (v.length < 150) return `At least 150 characters needed (you have ${v.length}).`;
+      if (v.length > 2000) return 'Maximum 2000 characters.';
+      return null;
+    },
+    why_warn(v) {
+      // light AI-text heuristic
+      const phrases = [
+        'thrilled to apply','leverage my skills','i am uniquely positioned',
+        'i would love the opportunity','perfect fit for this role','strong alignment',
+        'as an ai language model','passion for innovation','dynamic and results-driven'
+      ];
+      const lower = v.toLowerCase();
+      let hits = phrases.filter(p => lower.includes(p)).length;
+      if (hits >= 2) return 'This reads a bit like AI-generated boilerplate. Consider adding specifics in your own words.';
+      return null;
+    },
+    resume(v) {
+      v = v.trim();
+      if (!v) return 'Required.';
+      let u; try { u = new URL(v); } catch { return 'Not a valid URL.'; }
+      const ok = RESUME_DOMAINS.some(d => u.hostname === d || u.hostname.endsWith('.' + d));
+      if (!ok) return 'Please use Google Docs, Drive, OneDrive, or Dropbox.';
+      return null;
+    },
+    email(v) {
+      v = v.trim();
+      if (!v) return 'Required.';
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return 'Not a valid email.';
+      return null;
+    },
+    phone(form) {
+      const cc = form.phone_cc.value.trim();
+      const ph = form.phone.value.trim();
+      if (!cc) return 'Select a country code.';
+      if (!ph) return 'Required.';
+      const digits = ph.replace(/\D/g,'');
+      if (digits.length < 6 || digits.length > 15) return 'Phone number looks invalid.';
+      // smart: country-aware length
+      const expected = {'+1':10,'+91':10,'+44':10,'+61':9,'+971':9,'+966':9,'+27':9,'+65':8,'+86':11,'+81':10,'+49':11,'+33':9};
+      if (expected[cc] && digits.length !== expected[cc]) {
+        return `Expected ${expected[cc]} digits for ${cc} — you entered ${digits.length}.`;
+      }
+      return null;
+    }
+  };
+
+  const fieldEls = document.querySelectorAll('.field[data-validate]');
+  function setError(field, msg) {
+    field.classList.toggle('invalid', !!msg);
+    if (msg) field.querySelector('.err').textContent = msg;
+  }
+  function setWarn(field, msg) {
+    field.classList.toggle('warn', !!msg);
+    if (msg) field.querySelector('.warn-msg').textContent = msg;
+  }
+
+  function validateField(field) {
+    const kind = field.dataset.validate;
+    let val;
+    if (kind === 'phone') {
+      const err = validators.phone(form);
+      setError(field, err);
+      return !err;
+    }
+    const input = field.querySelector('input,select,textarea');
+    val = input.value;
+    const err = validators[kind] ? validators[kind](val) : null;
+    setError(field, err);
+    if (validators[kind + '_warn']) {
+      const w = !err ? validators[kind + '_warn'](val) : null;
+      setWarn(field, w);
+    }
+    return !err;
+  }
+
+  fieldEls.forEach(f => {
+    const inputs = f.querySelectorAll('input,select,textarea');
+    inputs.forEach(i => {
+      i.addEventListener('blur', () => validateField(f));
+      i.addEventListener('input', () => { if (f.classList.contains('invalid')) validateField(f); });
+    });
+  });
+
+  const form = document.getElementById('referral-form');
+  const btn = document.getElementById('submit-btn');
+  const status = document.getElementById('submit-status');
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    let allOk = true;
+    fieldEls.forEach(f => { if (!validateField(f)) allOk = false; });
+    if (!allOk) {
+      status.textContent = 'Please fix the highlighted fields above.';
+      status.className = 'submit-status error';
+      const firstBad = document.querySelector('.field.invalid');
+      if (firstBad) firstBad.scrollIntoView({behavior:'smooth', block:'center'});
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Submitting…';
+    status.textContent = 'Verifying details with the server (LinkedIn, job link, resume link, email)…';
+    status.className = 'submit-status';
+
+    const payload = {
+      request_type: form.request_type.value,
+      full_name: form.full_name.value.trim(),
+      linkedin_url: form.linkedin_url.value.trim(),
+      experience: form.experience.value,
+      target_company: form.target_company.value.trim(),
+      target_role: form.target_role.value.trim(),
+      job_url: form.job_url.value.trim(),
+      why: form.why.value.trim(),
+      resume_url: form.resume_url.value.trim(),
+      email: form.email.value.trim(),
+      phone_cc: form.phone_cc.value,
+      phone: form.phone.value.trim(),
+    };
+
+    try {
+      const r = await fetch(API_URL, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(payload),
+      });
+      const data = await r.json();
+      if (!r.ok) {
+        if (data.field_errors) {
+          for (const [name, msg] of Object.entries(data.field_errors)) {
+            const f = document.querySelector(`.field[data-validate="${name}"]`);
+            if (f) setError(f, msg);
+          }
+          throw new Error(data.message || 'Some fields could not be verified.');
+        }
+        throw new Error(data.message || 'Submission failed. Please try again.');
+      }
+      // success
+      document.getElementById('referral-form').style.display = 'none';
+      const sc = document.getElementById('success-card');
+      const url = data.view_url || (VIEW_BASE + data.token);
+      document.getElementById('view-url').textContent = url;
+      document.getElementById('copy-btn').onclick = () => {
+        navigator.clipboard.writeText(url);
+        document.getElementById('copy-btn').textContent = 'Copied ✓';
+      };
+      sc.classList.add('show');
+      sc.scrollIntoView({behavior:'smooth', block:'start'});
+    } catch (err) {
+      status.textContent = err.message;
+      status.className = 'submit-status error';
+      btn.disabled = false;
+      btn.textContent = 'Submit Referral Request';
+    }
+  });
+</script>
+
+</body>
+</html>

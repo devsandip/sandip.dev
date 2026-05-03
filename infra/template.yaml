@@ -1,0 +1,181 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: sandip.dev — referral form backend (DynamoDB + Lambda + SES)
+
+Parameters:
+  DomainName:
+    Type: String
+    Default: sandip.dev
+    Description: Apex domain (must already be in Route53 in this account).
+  AdminEmail:
+    Type: String
+    Default: me@sandip.dev
+    Description: Where new referral submissions are forwarded.
+  FromEmail:
+    Type: String
+    Default: noreply@sandip.dev
+    Description: SES verified sender (will be auto-verified via DKIM).
+  AllowOrigin:
+    Type: String
+    Default: 'https://sandip.dev'
+    Description: CORS origin for the frontend. Use '*' during local dev.
+
+Globals:
+  Function:
+    Runtime: python3.12
+    Timeout: 15
+    MemorySize: 256
+    Architectures: [arm64]
+    Tracing: Active
+
+Resources:
+
+  # ─── DynamoDB ───────────────────────────────────────────────
+  ReferralTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: sandip-dev-referrals
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: token
+          AttributeType: S
+      KeySchema:
+        - AttributeName: token
+          KeyType: HASH
+      TimeToLiveSpecification:
+        AttributeName: expires_at
+        Enabled: true
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+
+  # ─── SES domain identity (DKIM CNAMEs auto-added to Route53) ──
+  SesDomainIdentity:
+    Type: AWS::SES::EmailIdentity
+    Properties:
+      EmailIdentity: !Ref DomainName
+      DkimAttributes:
+        SigningEnabled: true
+      DkimSigningAttributes:
+        NextSigningKeyLength: RSA_2048_BIT
+      MailFromAttributes:
+        MailFromDomain: !Sub 'mail.${DomainName}'
+        BehaviorOnMxFailure: USE_DEFAULT_VALUE
+
+  # Route53 records for DKIM (3 CNAMEs)
+  DkimRecord1:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneName: !Sub '${DomainName}.'
+      Name: !Sub '${SesDomainIdentity.DkimDNSTokenName1}.'
+      Type: CNAME
+      TTL: '1800'
+      ResourceRecords: [!Sub '${SesDomainIdentity.DkimDNSTokenValue1}']
+  DkimRecord2:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneName: !Sub '${DomainName}.'
+      Name: !Sub '${SesDomainIdentity.DkimDNSTokenName2}.'
+      Type: CNAME
+      TTL: '1800'
+      ResourceRecords: [!Sub '${SesDomainIdentity.DkimDNSTokenValue2}']
+  DkimRecord3:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneName: !Sub '${DomainName}.'
+      Name: !Sub '${SesDomainIdentity.DkimDNSTokenName3}.'
+      Type: CNAME
+      TTL: '1800'
+      ResourceRecords: [!Sub '${SesDomainIdentity.DkimDNSTokenValue3}']
+
+  # MAIL FROM: MX + SPF
+  MailFromMx:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneName: !Sub '${DomainName}.'
+      Name: !Sub 'mail.${DomainName}.'
+      Type: MX
+      TTL: '1800'
+      ResourceRecords: [!Sub '10 feedback-smtp.${AWS::Region}.amazonses.com']
+  MailFromSpf:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneName: !Sub '${DomainName}.'
+      Name: !Sub 'mail.${DomainName}.'
+      Type: TXT
+      TTL: '1800'
+      ResourceRecords: ['"v=spf1 include:amazonses.com ~all"']
+
+  # ─── HTTP API ───────────────────────────────────────────────
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowOrigins: [!Ref AllowOrigin, 'http://localhost:8000']
+        AllowMethods: [GET, POST, OPTIONS]
+        AllowHeaders: [Content-Type]
+
+  # ─── Submit Lambda ──────────────────────────────────────────
+  SubmitFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/
+      Handler: submit.handler
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref ReferralTable
+          SES_FROM: !Sub 'Sandip Dev <${FromEmail}>'
+          ADMIN_TO: !Ref AdminEmail
+          VIEW_BASE: !Sub 'https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/r'
+          ALLOW_ORIGIN: !Ref AllowOrigin
+          TTL_DAYS: '365'
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ReferralTable
+        - Statement:
+            - Effect: Allow
+              Action: ses:SendEmail
+              Resource: '*'
+      Events:
+        Submit:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /referral
+            Method: POST
+        Options:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /referral
+            Method: OPTIONS
+
+  # ─── View Lambda ────────────────────────────────────────────
+  ViewFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/
+      Handler: view.handler
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref ReferralTable
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref ReferralTable
+      Events:
+        View:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /r/{token}
+            Method: GET
+
+Outputs:
+  ApiUrl:
+    Description: Base URL of the HTTP API. Append /referral for POST and /r/{token} for GET.
+    Value: !Sub 'https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com'
+  SubmitEndpoint:
+    Value: !Sub 'https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/referral'
+  ViewBase:
+    Value: !Sub 'https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/r/'
+  TableName:
+    Value: !Ref ReferralTable
