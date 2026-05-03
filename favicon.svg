@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="sandip.dev">
+  <style>
+    .fg { fill: #0A0A0B; }
+    .stroke { fill: none; stroke: #0A0A0B; stroke-width: 8; stroke-linejoin: round; }
+    @media (prefers-color-scheme: dark) {
+      .fg { fill: #F2F2F4; }
+      .stroke { stroke: #F2F2F4; }
+    }
+  </style>
+  <rect class="stroke" x="8" y="8" width="84" height="84" rx="14" ry="14"/>
+  <text class="fg" x="50" y="64" text-anchor="middle"
+        font-family="Inter, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif"
+        font-weight="800" font-size="48" letter-spacing="-1">sd</text>
+  <rect class="fg" x="40" y="76" width="20" height="5" rx="0.5"/>
+</svg>
