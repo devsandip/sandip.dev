@@ -331,6 +331,17 @@
     font-style: italic;
     color: var(--accent);
   }
+  .currently-val a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--rule);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.15s, color 0.15s;
+  }
+  .currently-val a:hover {
+    color: var(--accent);
+    text-decoration-color: var(--accent);
+  }
   .footnote {
     margin-top: 24px;
     padding-top: 20px;
@@ -1059,15 +1070,15 @@
         <div class="currently-list">
           <div class="currently-row">
             <span class="currently-key">reading</span>
-            <span class="currently-val"><em>The Goal</em>, again. It keeps holding up.</span>
+            <span class="currently-val"><a href="https://www.goodreads.com/book/show/39074550-humble-pi" target="_blank" rel="noopener"><em>Humble Pi: When Math Goes Wrong in the Real World</em></a>.</span>
           </div>
           <div class="currently-row">
             <span class="currently-key">building</span>
-            <span class="currently-val">A small tool that tells me when my SQL is lying.</span>
+            <span class="currently-val"><a href="https://wndr.ist/" target="_blank" rel="noopener">wndr.ist</a> + an AI OS to manage as much of my life as possible.</span>
           </div>
           <div class="currently-row">
             <span class="currently-key">drinking</span>
-            <span class="currently-val">Oat-milk cortado. Don't @ me.</span>
+            <span class="currently-val"><a href="https://pegasuscoffee.com/products/winslows-revenge?_pos=3&amp;_fid=ec0217a2c&amp;_ss=c" target="_blank" rel="noopener">Pegasus Coffee Winslow's Revenge</a>. Double shot, no milk.</span>
           </div>
           <div class="currently-row">
             <span class="currently-key">thinking</span>
@@ -1075,7 +1086,7 @@
           </div>
           <div class="currently-row">
             <span class="currently-key">avoiding</span>
-            <span class="currently-val">Open-plan offices. Always.</span>
+            <span class="currently-val">People.</span>
           </div>
         </div>
         <div class="footnote">
