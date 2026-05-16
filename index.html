@@ -268,6 +268,8 @@
     border-bottom: 1px solid var(--rule);
     cursor: pointer;
     transition: padding 0.2s ease;
+    text-decoration: none;
+    color: inherit;
   }
   .link-row:hover { padding-left: 8px; }
   .link-row:hover .link-arrow { transform: translateX(4px); color: var(--accent); }
@@ -819,6 +821,8 @@
     display: grid;
     grid-template-columns: 1fr auto;
     align-items: center;
+    text-decoration: none;
+    color: inherit;
   }
   .channel:hover { background: var(--paper-2); }
   .channel:hover .channel-arrow { color: var(--accent); transform: translate(2px, -2px); }
@@ -1015,36 +1019,36 @@
       <div class="links-block">
         <div class="label">// elsewhere on the internet</div>
         <div class="links-list">
-          <div class="link-row">
+          <a class="link-row" href="https://www.linkedin.com/feed/" target="_blank" rel="noopener">
             <span class="link-num">01</span>
             <span class="link-name">LinkedIn</span>
             <span class="link-meta">professional, mostly</span>
             <span class="link-arrow">→</span>
-          </div>
-          <div class="link-row">
+          </a>
+          <a class="link-row" href="https://sandipdev.medium.com/" target="_blank" rel="noopener">
             <span class="link-num">02</span>
             <span class="link-name">Medium</span>
             <span class="link-meta">half-baked, half-good</span>
             <span class="link-arrow">→</span>
-          </div>
-          <div class="link-row">
+          </a>
+          <a class="link-row" href="https://github.com/devsandip" target="_blank" rel="noopener">
             <span class="link-num">03</span>
             <span class="link-name">GitHub</span>
             <span class="link-meta">code, also evidence</span>
             <span class="link-arrow">→</span>
-          </div>
+          </a>
           <div class="link-row">
             <span class="link-num">04</span>
             <span class="link-name">Apps & hobby projects</span>
             <span class="link-meta">things I built on weekends</span>
             <span class="link-arrow">→</span>
           </div>
-          <div class="link-row">
+          <a class="link-row" href="https://www.blog.sandip.dev/" target="_blank" rel="noopener">
             <span class="link-num">05</span>
             <span class="link-name">Blog</span>
             <span class="link-meta">long-form thinking, slowly</span>
             <span class="link-arrow">→</span>
-          </div>
+          </a>
         </div>
       </div>
     </div>
@@ -1338,20 +1342,20 @@
           </div>
           <span class="channel-arrow">↗</span>
         </div>
-        <div class="channel">
+        <a class="channel" href="https://www.linkedin.com/feed/" target="_blank" rel="noopener">
           <div>
             <div class="channel-name">LinkedIn</div>
             <div class="channel-handle">/in/sandipdev</div>
           </div>
           <span class="channel-arrow">↗</span>
-        </div>
-        <div class="channel">
+        </a>
+        <a class="channel" href="https://github.com/devsandip" target="_blank" rel="noopener">
           <div>
             <div class="channel-name">GitHub</div>
-            <div class="channel-handle">@sandipdev</div>
+            <div class="channel-handle">@devsandip</div>
           </div>
           <span class="channel-arrow">↗</span>
-        </div>
+        </a>
         <div class="channel">
           <div>
             <div class="channel-name">X (Twitter)</div>
@@ -1359,13 +1363,13 @@
           </div>
           <span class="channel-arrow">↗</span>
         </div>
-        <div class="channel">
+        <a class="channel" href="https://sandipdev.medium.com/" target="_blank" rel="noopener">
           <div>
             <div class="channel-name">Medium</div>
             <div class="channel-handle">@sandipdev · slowly</div>
           </div>
           <span class="channel-arrow">↗</span>
-        </div>
+        </a>
         <div class="channel">
           <div>
             <div class="channel-name">Phone</div>
