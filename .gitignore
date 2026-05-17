@@ -5,3 +5,7 @@ infra/samconfig.toml
 .env
 .env.*
 .claude/
+
+# Session resume files
+/RESUME.md
+/resume/
