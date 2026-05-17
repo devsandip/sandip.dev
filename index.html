@@ -713,6 +713,137 @@
     color: #999;
   }
 
+  /* ─── PORTFOLIO ────────────────────────── */
+  .portfolio {
+    padding-top: 80px;
+    padding-bottom: 120px;
+  }
+  .portfolio-hero {
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 48px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 32px;
+  }
+  .portfolio-hero h1 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: clamp(48px, 6vw, 84px);
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+    margin-top: 16px;
+  }
+  .portfolio-hero h1 em {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .portfolio-summary {
+    margin-top: 96px;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 64px;
+    align-items: start;
+  }
+  .portfolio-summary a {
+    color: inherit;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .portfolio-summary a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent) !important;
+  }
+
+  /* generic CTA used in the resume teaser */
+  .cta-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+    margin-top: 8px;
+  }
+  .cta-link:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  /* project rows — clickable variants of .data-row */
+  .project-row { align-items: start; }
+  .project-row .role {
+    display: block;
+    font-weight: 600;
+    color: var(--ink);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .project-row .role:hover { color: var(--accent); }
+  .project-row .role-arrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72em;
+    color: var(--ink-softer);
+    margin-left: 6px;
+    transition: color 0.15s, transform 0.2s ease;
+    display: inline-block;
+    vertical-align: 2px;
+  }
+  .project-row .role:hover .role-arrow {
+    color: var(--accent);
+    transform: translate(3px, -2px);
+  }
+  .project-links {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .project-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+    text-transform: lowercase;
+    border-bottom: 1px dotted var(--ink-softer);
+    padding-bottom: 2px;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .project-links a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+  .inline-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.86em;
+    background: var(--paper-2);
+    padding: 1px 6px;
+    color: var(--ink);
+  }
+  .portfolio-foot {
+    margin-top: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-softer);
+    letter-spacing: 0.03em;
+  }
+  .portfolio-foot a {
+    color: var(--ink-soft);
+    border-bottom: 1px dotted var(--ink-softer);
+    padding-bottom: 1px;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .portfolio-foot a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
   .resume-summary {
     margin-top: 96px;
     display: grid;
@@ -975,12 +1106,12 @@
     nav.primary { gap: 0; }
     nav.primary a { padding: 8px 8px; font-size: 11px; }
     .page { padding: 0 20px; }
-    .home, .about, .resume, .contact { padding-top: 56px; padding-bottom: 80px; }
-    .home-grid, .about-hero, .story, .data-block, .pitch, .resume-summary, .channels {
+    .home, .about, .resume, .portfolio, .contact { padding-top: 56px; padding-bottom: 80px; }
+    .home-grid, .about-hero, .story, .data-block, .pitch, .resume-summary, .portfolio-summary, .channels {
       grid-template-columns: 1fr;
       gap: 32px;
     }
-    .resume-hero { grid-template-columns: 1fr; }
+    .resume-hero, .portfolio-hero { grid-template-columns: 1fr; }
     .stats-grid { grid-template-columns: repeat(2, 1fr); }
     .contact-grid { grid-template-columns: 1fr; gap: 32px; }
     .channels-grid { grid-template-columns: 1fr; }
@@ -1002,6 +1133,7 @@
     <nav class="primary">
       <a data-route="home">home</a>
       <a data-route="about">about</a>
+      <a data-route="portfolio">portfolio</a>
       <a data-route="resume">work</a>
       <a data-route="contact">contact</a>
     </nav>
@@ -1048,12 +1180,12 @@
             <span class="link-meta">code, also evidence</span>
             <span class="link-arrow">→</span>
           </a>
-          <div class="link-row">
+          <a class="link-row" data-route="portfolio">
             <span class="link-num">04</span>
             <span class="link-name">Apps & hobby projects</span>
             <span class="link-meta">things I built on weekends</span>
             <span class="link-arrow">→</span>
-          </div>
+          </a>
           <a class="link-row" href="https://www.blog.sandip.dev/" target="_blank" rel="noopener">
             <span class="link-num">05</span>
             <span class="link-name">Blog</span>
@@ -1302,11 +1434,139 @@
     </div>
   </div>
 
+  <div class="data-block">
+    <div class="label">// also · I build things</div>
+    <div>
+      <p class="skills-prose" style="margin-bottom: 18px;">
+        Off-hours, I write code too. A pastebin on AWS, a Telegram bot that turns screenshots into Google Calendar events, a few Claude Code skills for solo builders, and the site you're reading right now. None of them are trying to be startups. All of them scratch a specific itch.
+      </p>
+      <a class="cta-link" data-route="portfolio">See the portfolio →</a>
+    </div>
+  </div>
+
   <div class="resume-summary">
     <div class="label">// summary</div>
     <div>
       <p style="font-size:17px; line-height:1.7; color: var(--ink-soft); max-width: 640px;">
         Thirteen years building products. Four at Amazon as a Senior PM/PM. Two business degrees, one MBA. A handful of large numbers attached to my name. Available for the right kind of problem — preferably one that's been sitting on someone's desk for too long.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ PORTFOLIO ═══════════════ -->
+<section class="page portfolio" data-page="portfolio">
+  <div class="portfolio-hero">
+    <div>
+      <div class="label">// portfolio · code, nights and weekends</div>
+      <h1>Built, <em>mostly</em>.</h1>
+    </div>
+    <a class="download-btn" href="https://github.com/devsandip" target="_blank" rel="noopener">
+      <span>All on GitHub</span>
+      <span class="arrow">↗</span>
+    </a>
+  </div>
+
+  <div class="pitch">
+    <div class="label">// why this page exists</div>
+    <div class="pitch-body">
+      <p>
+        I'm a Product Manager by day. By night I write code — partly because I miss it, partly because the fastest way to know if an idea is any good is to ship the smallest possible version and let it tell you.
+      </p>
+
+      <span class="reason">— how this list works —</span>
+      <p>
+        Most of these started as weekend experiments. None of them are trying to be startups. All of them scratch a specific itch — usually mine, occasionally one I noticed someone else having.
+      </p>
+
+      <span class="reason">— fair warning —</span>
+      <p>
+        Some are over-engineered for what they do. That's the point. The interesting part isn't the size of the thing; it's putting it on the internet, watching it work, and learning what I was wrong about.
+      </p>
+    </div>
+  </div>
+
+  <div class="data-block">
+    <div class="label">// projects</div>
+    <div>
+      <div class="data-list">
+        <div class="data-row project-row">
+          <span class="data-when">Apr 2026</span>
+          <div class="data-what">
+            <a class="role" href="https://wndr.ist/" target="_blank" rel="noopener">wndr.ist <span class="role-arrow">↗</span></a>
+            <span class="org">AI road-trip planner · multi-day, across America</span>
+            <span class="desc">A trip concierge for multi-day road trips across the US. Tell it where you're starting, where you want to end up, and what kind of trip you're looking for — it builds the route, picks the night stops, and writes the daily itinerary. Knows when to take the scenic detour.</span>
+            <div class="project-links">
+              <a href="https://wndr.ist/" target="_blank" rel="noopener">wndr.ist →</a>
+            </div>
+          </div>
+          <span class="data-tag">ai</span>
+        </div>
+
+        <div class="data-row project-row">
+          <span class="data-when">Apr 2026</span>
+          <div class="data-what">
+            <a class="role" href="https://blurb.sandip.dev" target="_blank" rel="noopener">blurb <span class="role-arrow">↗</span></a>
+            <span class="org">Tiny paste-and-share service</span>
+            <span class="desc">A pastebin running on AWS Lambda, DynamoDB, API Gateway, and Route 53. One <code class="inline-code">deploy.sh</code> handles cert provisioning, packaging, and the CloudFormation diff. Built because I wanted somewhere to dump text that wasn't a Google Doc and wasn't somebody else's pastebin.</span>
+            <div class="project-links">
+              <a href="https://blurb.sandip.dev" target="_blank" rel="noopener">blurb.sandip.dev →</a>
+              <a href="https://github.com/devsandip/blurb" target="_blank" rel="noopener">repo →</a>
+            </div>
+          </div>
+          <span class="data-tag">aws</span>
+        </div>
+
+        <div class="data-row project-row">
+          <span class="data-when">Feb 2026</span>
+          <div class="data-what">
+            <a class="role" href="https://github.com/devsandip/scrask-bot" target="_blank" rel="noopener">scrask-bot <span class="role-arrow">↗</span></a>
+            <span class="org">Screenshot → Telegram → Calendar or Tasks</span>
+            <span class="desc">Send a screenshot of an event or a to-do to a Telegram bot. Vision AI parses it. The right thing lands in Google Calendar or Google Tasks, automatically. Gemini first because it's cheap; Claude fallback when confidence drops below a threshold.</span>
+            <div class="project-links">
+              <a href="https://github.com/devsandip/scrask-bot" target="_blank" rel="noopener">repo →</a>
+            </div>
+          </div>
+          <span class="data-tag">python</span>
+        </div>
+
+        <div class="data-row project-row">
+          <span class="data-when">Apr 2026</span>
+          <div class="data-what">
+            <a class="role" href="https://brewnbanter.app/" target="_blank" rel="noopener">brewnbanter.app <span class="role-arrow">↗</span></a>
+            <span class="org">Personal coffee-chat &amp; meeting booking · anyone can sign up</span>
+            <span class="desc">Calendly-style booking, free to sign up. Reads your Google Calendar, iCal, Todoist, and TickTick so it knows when you're actually free. Rescheduling and cancellation happen straight from Google Calendar — there's no extra app to install.</span>
+            <div class="project-links">
+              <a href="https://brewnbanter.app/" target="_blank" rel="noopener">brewnbanter.app →</a>
+            </div>
+          </div>
+          <span class="data-tag">typescript</span>
+        </div>
+
+        <div class="data-row project-row">
+          <span class="data-when">May 2026</span>
+          <div class="data-what">
+            <a class="role" href="https://github.com/devsandip/my-claude-skills" target="_blank" rel="noopener">my-claude-skills <span class="role-arrow">↗</span></a>
+            <span class="org">An evergreen repo of my Claude skills &amp; commands</span>
+            <span class="desc">An ever-growing repo of the Claude Code skills and slash commands I actually use. The biggest piece right now is a journal convention for solo coding projects: daily entries, weekly rollups, a live index. Plus the commands that drive it.</span>
+            <div class="project-links">
+              <a href="https://github.com/devsandip/my-claude-skills" target="_blank" rel="noopener">repo →</a>
+            </div>
+          </div>
+          <span class="data-tag">skills</span>
+        </div>
+      </div>
+      <div class="portfolio-foot">
+        // everything else lives at <a href="https://github.com/devsandip" target="_blank" rel="noopener">github.com/devsandip</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="portfolio-summary">
+    <div class="label">// what's next</div>
+    <div>
+      <p style="font-size:17px; line-height:1.7; color: var(--ink-soft); max-width: 640px;">
+        Always one or two half-finished things in a folder. The current one is an AI OS that tries to run as much of my life as it can — calendar, inbox, focus, errands. If you're building something adjacent, <a data-route="contact" style="border-bottom:1px solid var(--rule); padding-bottom:1px; cursor:pointer;">come say hi</a>.
       </p>
     </div>
   </div>
@@ -1431,9 +1691,9 @@
 
 <script>
   // ─── Routing ──────────────────────────
-  const routes = ['home', 'about', 'resume', 'contact'];
+  const routes = ['home', 'about', 'resume', 'portfolio', 'contact'];
 
-  function showPage(name) {
+  function showPage(name, target) {
     if (!routes.includes(name)) name = 'home';
     document.querySelectorAll('.page').forEach(p => {
       p.classList.toggle('active', p.dataset.page === name);
@@ -1441,7 +1701,15 @@
     document.querySelectorAll('nav.primary a, .logo').forEach(a => {
       a.classList.toggle('active', a.dataset.route === name);
     });
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    if (target) {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      requestAnimationFrame(() => {
+        const el = document.getElementById(target);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
     if (location.hash !== '#/' + name) {
       history.replaceState(null, '', '#/' + name);
     }
@@ -1450,7 +1718,7 @@
   document.querySelectorAll('[data-route]').forEach(el => {
     el.addEventListener('click', e => {
       e.preventDefault();
-      showPage(el.dataset.route);
+      showPage(el.dataset.route, el.dataset.target);
     });
   });
 
