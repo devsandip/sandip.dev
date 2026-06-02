@@ -778,6 +778,14 @@
 
   /* project rows — clickable variants of .data-row */
   .project-row { align-items: start; }
+  .project-row .org {
+    display: block;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .project-row .desc {
+    display: block;
+  }
   .project-row .role {
     display: block;
     font-weight: 600;
@@ -1491,6 +1499,19 @@
     <div>
       <div class="data-list">
         <div class="data-row project-row">
+          <span class="data-when">Jun 2026</span>
+          <div class="data-what">
+            <a class="role" href="https://github.com/devsandip/samaritan" target="_blank" rel="noopener">samaritan <span class="role-arrow">↗</span></a>
+            <span class="org">An AI PM operating system · capture, file, recall, synthesize</span>
+            <span class="desc">A personal OS for notes, decisions, and tasks. It brokers between Obsidian for prose, Notion for structured rows, and a task manager, so a stray thought or a meeting decision lands in the right place without manual filing. Eight capture skills (log, decision, meeting, recall, weekly, and more) ship as one Claude Code plugin.</span>
+            <div class="project-links">
+              <a href="https://github.com/devsandip/samaritan" target="_blank" rel="noopener">repo →</a>
+            </div>
+          </div>
+          <span class="data-tag">ai</span>
+        </div>
+
+        <div class="data-row project-row">
           <span class="data-when">Apr 2026</span>
           <div class="data-what">
             <a class="role" href="https://wndr.ist/" target="_blank" rel="noopener">wndr.ist <span class="role-arrow">↗</span></a>
@@ -1504,17 +1525,16 @@
         </div>
 
         <div class="data-row project-row">
-          <span class="data-when">Apr 2026</span>
+          <span class="data-when">May 2026</span>
           <div class="data-what">
-            <a class="role" href="https://blurb.sandip.dev" target="_blank" rel="noopener">blurb <span class="role-arrow">↗</span></a>
-            <span class="org">Tiny paste-and-share service</span>
-            <span class="desc">A pastebin running on AWS Lambda, DynamoDB, API Gateway, and Route 53. One <code class="inline-code">deploy.sh</code> handles cert provisioning, packaging, and the CloudFormation diff. Built because I wanted somewhere to dump text that wasn't a Google Doc and wasn't somebody else's pastebin.</span>
+            <a class="role" href="https://github.com/devsandip/my-claude-skills" target="_blank" rel="noopener">my-claude-skills <span class="role-arrow">↗</span></a>
+            <span class="org">An evergreen repo of my Claude skills &amp; commands</span>
+            <span class="desc">An ever-growing repo of the Claude Code skills and slash commands I actually use. The biggest piece right now is a journal convention for solo coding projects: daily entries, weekly rollups, a live index. Plus the commands that drive it.</span>
             <div class="project-links">
-              <a href="https://blurb.sandip.dev" target="_blank" rel="noopener">blurb.sandip.dev →</a>
-              <a href="https://github.com/devsandip/blurb" target="_blank" rel="noopener">repo →</a>
+              <a href="https://github.com/devsandip/my-claude-skills" target="_blank" rel="noopener">repo →</a>
             </div>
           </div>
-          <span class="data-tag">aws</span>
+          <span class="data-tag">skills</span>
         </div>
 
         <div class="data-row project-row">
@@ -1533,27 +1553,15 @@
         <div class="data-row project-row">
           <span class="data-when">Apr 2026</span>
           <div class="data-what">
-            <a class="role" href="https://brewnbanter.app/" target="_blank" rel="noopener">brewnbanter.app <span class="role-arrow">↗</span></a>
-            <span class="org">Personal coffee-chat &amp; meeting booking · anyone can sign up</span>
-            <span class="desc">Calendly-style booking, free to sign up. Reads your Google Calendar, iCal, Todoist, and TickTick so it knows when you're actually free. Rescheduling and cancellation happen straight from Google Calendar — there's no extra app to install.</span>
+            <a class="role" href="https://blurb.sandip.dev" target="_blank" rel="noopener">blurb <span class="role-arrow">↗</span></a>
+            <span class="org">Tiny paste-and-share service</span>
+            <span class="desc">A pastebin running on AWS Lambda, DynamoDB, API Gateway, and Route 53. One <code class="inline-code">deploy.sh</code> handles cert provisioning, packaging, and the CloudFormation diff. Built because I wanted somewhere to dump text that wasn't a Google Doc and wasn't somebody else's pastebin.</span>
             <div class="project-links">
-              <a href="https://brewnbanter.app/" target="_blank" rel="noopener">brewnbanter.app →</a>
+              <a href="https://blurb.sandip.dev" target="_blank" rel="noopener">blurb.sandip.dev →</a>
+              <a href="https://github.com/devsandip/blurb" target="_blank" rel="noopener">repo →</a>
             </div>
           </div>
-          <span class="data-tag">typescript</span>
-        </div>
-
-        <div class="data-row project-row">
-          <span class="data-when">May 2026</span>
-          <div class="data-what">
-            <a class="role" href="https://github.com/devsandip/my-claude-skills" target="_blank" rel="noopener">my-claude-skills <span class="role-arrow">↗</span></a>
-            <span class="org">An evergreen repo of my Claude skills &amp; commands</span>
-            <span class="desc">An ever-growing repo of the Claude Code skills and slash commands I actually use. The biggest piece right now is a journal convention for solo coding projects: daily entries, weekly rollups, a live index. Plus the commands that drive it.</span>
-            <div class="project-links">
-              <a href="https://github.com/devsandip/my-claude-skills" target="_blank" rel="noopener">repo →</a>
-            </div>
-          </div>
-          <span class="data-tag">skills</span>
+          <span class="data-tag">aws</span>
         </div>
       </div>
       <div class="portfolio-foot">
