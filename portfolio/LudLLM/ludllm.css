@@ -687,6 +687,25 @@ figure.lud.diagram img { padding: 8px; }
   transition: color 0.15s, border-color 0.15s;
 }
 .tab-studio-note a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.studio-actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+}
+.newtab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px solid var(--ink);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  transition: color 0.15s, border-color 0.15s;
+}
+.newtab-btn:hover { color: var(--accent); border-color: var(--accent); }
 
 /* ─── Novel cards on the overview ──────── */
 .novel-grid {
