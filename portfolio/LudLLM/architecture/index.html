@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LudLLM architecture: how a few sentences become a novel · Sandip Dev</title>
+<meta name="description" content="The full architecture of LudLLM: the stage chain, the single-file state, the no-leak machinery, the cross-family critic, the temporal spine, and the story-graph studio.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/portfolio/LudLLM/ludllm.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="header-inner">
+    <a class="logo" href="/">
+      <span class="logo-mark" aria-hidden="true"></span>
+      <span>sandip.dev</span>
+    </a>
+    <nav class="primary">
+      <a href="/#/home">home</a>
+      <a href="/#/about">about</a>
+      <a href="/#/portfolio" class="active">portfolio</a>
+      <a href="/#/resume">work</a>
+      <a href="/#/contact">contact</a>
+    </nav>
+    <div class="header-meta">
+      <span class="status-dot"></span>
+      <span>ludLLM · architecture</span>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="page">
+
+  <div class="crumb">
+    <a href="/#/portfolio">portfolio</a>
+    <span class="sep">/</span>
+    <a href="/portfolio/LudLLM/">LudLLM</a>
+    <span class="sep">/</span>
+    <span class="here">architecture</span>
+  </div>
+
+  <div class="lud-hero">
+    <div>
+      <div class="label">// architecture</div>
+      <h1>How a few sentences <em>become a novel</em>.</h1>
+      <p class="lead">
+        LudLLM expands a paragraph of premise into a full novel through a fixed chain of
+        stages. The hard part is not the prose. It is holding two planes of knowledge apart
+        (what the story knows versus what each character knows) so a secret survives 80,000
+        words and pays out on schedule.
+      </p>
+      <div class="btn-row" style="margin-top:28px;">
+        <a class="cta-link" href="https://github.com/devsandip/ludLLM" target="_blank" rel="noopener">
+          The code on GitHub <span>↗</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="article">
+    <aside class="article-rail">
+      <div class="label">// architecture</div>
+      <p class="rail-note">
+        The stages, the single-file state, the secret-keeping guardrails, the cross-family
+        critic, the temporal spine, and the story-graph studio.
+      </p>
+      <p class="rail-note" style="margin-top:14px;">
+        <a href="/portfolio/LudLLM/">← back to the overview</a>
+      </p>
+    </aside>
+
+    <article class="prose">
+      <p class="lede">
+        LudLLM is an agentic pipeline that writes a full-length spy novel end to end. You give
+        it a premise (a paragraph) and a secret spine (who hides what, and when the reader
+        should learn it versus when the protagonist does). It expands that into a grounded
+        world, a cast with private belief states, a narrative structure, a chapter outline, and
+        then roughly forty chapters of prose. A human approves the plan one stage at a time. The
+        models generate.
+      </p>
+      <p>
+        The whole project is a bet on one question: can a generate-plus-judge loop hold a secret
+        across 80,000 words and stay coherent, without reading like a machine wrote it. Four
+        finished books in, the answer is yes.
+      </p>
+
+      <h2>The core idea: two planes of knowledge</h2>
+      <p>
+        A spy novel lives or dies on dramatic irony. The reader knows the handler is lying; the
+        protagonist does not. For that to work across a whole book, the system has to track two
+        different things at once:
+      </p>
+      <ul>
+        <li><strong>What is true in the story</strong> (the omniscient layer the author controls).</li>
+        <li><strong>What each character believes</strong> (which is often wrong, and changes chapter to chapter as they learn).</li>
+      </ul>
+      <p>
+        LudLLM keeps these apart in a single validated state object. Every fact has an ID. Every
+        character carries a belief set that points at those fact IDs, including deliberately false
+        beliefs. A secret is a fact plus a binding that says which chapter reveals it to the
+        reader and which chapter reveals it to a given character. Those two numbers are usually
+        not the same, and that gap is the entire engine of suspense.
+      </p>
+
+      <h2>How a thin premise fills out</h2>
+      <p>
+        The expansion happens in a fixed chain of stages. Each one takes the state so far and
+        adds a layer, then stops for a human to approve before the next one runs.
+      </p>
+      <div class="table-wrap">
+        <table class="lud">
+          <thead>
+            <tr><th>Stage</th><th>Input</th><th>Output</th><th>What it adds</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>normalize</strong></td><td>raw premise text</td><td>a clean brief</td><td>tidies the premise into structured intent, no invention</td></tr>
+            <tr><td><strong>world</strong></td><td>the brief</td><td><code>world.md</code> + secret ledger</td><td>the plot mechanism, real-world grounding, an era timeline, and the tiered secrets with their reveal bindings</td></tr>
+            <tr><td><strong>cast</strong></td><td>world + facts</td><td><code>cast.md</code></td><td>the load-bearing roster, each character's belief state (including false beliefs), per-era beliefs, birth years</td></tr>
+            <tr><td><strong>structure</strong></td><td>world + cast</td><td><code>structure.md</code></td><td>POV strategy, time mode, the acts, the spy tropes in play, and which reveal lands in which act</td></tr>
+            <tr><td><strong>outline</strong></td><td>everything above</td><td><code>outline.md</code> + <code>timeline.md</code></td><td>per-chapter POV, beats, hooks, the era and story-time of each chapter, and the reader-versus-POV asymmetry view</td></tr>
+            <tr><td><strong>writer</strong></td><td>the outline</td><td><code>05_manuscript/</code></td><td>the actual chapters, drafted, critiqued, and revised one at a time</td></tr>
+            <tr><td><strong>dossier</strong></td><td>the final book</td><td>classified character files</td><td>per-character dossiers where the redactions are the reveals</td></tr>
+            <tr><td><strong>viz</strong></td><td>the final book</td><td><code>studio.html</code></td><td>the interactive story-graph studio (see below)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Extra characters and plot points are not asked for up front. The world stage invents the
+        plot mechanism and the secrets; the cast stage invents whoever the structure needs (an
+        analyst, a cutout, a mole) and gives each one a belief state bound to real fact IDs. By
+        the outline stage the thin premise has become a chapter-by-chapter plan with a tracked
+        secret in every beat.
+      </p>
+
+      <h3>The spine versus the off-spine stages</h3>
+      <p>
+        <code>normalize</code> through <code>outline</code> are the <strong>spine</strong>: a
+        linear chain where each stage produces authored intent that later stages depend on. The
+        spine is what the critic scores and what downstream invalidation walks (regenerate the
+        world and the outline goes stale). The writer consumes the spine.
+      </p>
+      <p>
+        <code>dossier</code> and <code>viz</code> are <strong>off-spine</strong>: they read the
+        finished book and emit artifacts that nothing else reads. They have no rubric and are
+        never invalidated. They are still mandatory, and they run <strong>last</strong>, after
+        the manuscript is complete, because the chapter loop mutates state as it writes. Building
+        them earlier would freeze a snapshot the writing then invalidates.
+      </p>
+
+      <h2>The state is one file, and it is the source of truth</h2>
+      <p>
+        Everything lives in <code>book_state.json</code>, a Pydantic-validated object. The
+        markdown you read at each stage is a generated view of that JSON, never the other way
+        around. An edit (move a reveal to chapter 8, cut a character) is reconciled into the JSON
+        and the markdown is re-rendered. The schema splits cleanly into an <strong>authored</strong>
+        half (world, facts, characters, structure, outline: the intent a human approves) and a
+        <strong>running</strong> half (the chapters, belief updates, rolling summary: what the
+        writer produces and mutates). Validation is the guardrail: an illegal hand-edit fails to
+        load rather than corrupting a book silently.
+      </p>
+      <p>
+        It is deliberately not a graph database or a vector store. It is one JSON file with
+        ID-linked relations traversed in Python. The knowledge graph is a computed view over those
+        relations, not a thing that is stored.
+      </p>
+
+      <h2>The no-leak machinery</h2>
+      <p>
+        The hardest constraint is negative: the drafter must not write a fact the POV character
+        does not yet know. LudLLM enforces this by <strong>denial by omission</strong>. When it
+        assembles the context for a chapter, it computes the exact set of facts that chapter's POV
+        is allowed to know at that story-time, and hands the drafter only those. The forbidden
+        facts are never in the prompt, so they cannot be written.
+      </p>
+      <p>
+        After drafting, a deterministic guard scans the prose for exact mentions of any forbidden
+        entity and raises if it finds one. Paraphrased or implied leaks (harder to catch by
+        substring) are caught by the cross-family critic, which is told what the chapter is allowed
+        to reveal and flags anything that runs ahead of schedule.
+      </p>
+      <p>
+        The hole in the logic is the honest one to name: the deterministic scan is exact-match, so
+        a leak that never names the thing directly leans entirely on the critic. That is the known
+        soft spot, and the reason the critic is a different model family (a second pair of eyes
+        that did not write the prose).
+      </p>
+
+      <h2>The critic is always a different family</h2>
+      <p>
+        Every judging step uses a model from a different family than the one that wrote the thing
+        being judged. Opus drafts and authors; Gemini critiques. This holds for both the
+        per-chapter prose critic and the per-stage critique panel. A model is a poor judge of its
+        own output; crossing the family line is the cheap structural fix.
+      </p>
+      <div class="table-wrap">
+        <table class="lud">
+          <thead>
+            <tr><th>Role</th><th>Model family</th><th>Why</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Drafter / author</td><td>Claude (Opus)</td><td>strongest long-form prose</td></tr>
+            <tr><td>Extractor</td><td>Claude (Haiku)</td><td>cheap, structured belief-update extraction</td></tr>
+            <tr><td>Critic (stage panel + prose)</td><td>Gemini</td><td>cross-family, so it does not grade its own work</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        By default the Anthropic-family calls route through the local Claude Code subscription
+        rather than the metered API. A full setup costs a few cents to under a dollar; a full book
+        is roughly ten to forty dollars of generation.
+      </p>
+
+      <h2>The critique panel</h2>
+      <p>
+        Each setup stage is scored by a panel before a human ever sees it. The critic runs one call
+        per rubric dimension (for the world stage: plausibility, grounding, coherence, originality,
+        stakes and theme), each scored 1 to 5 with evidence and a concrete fix. The verdict (ship,
+        tighten, or regenerate) is derived from the <strong>lowest</strong> dimension, not an
+        average, so one weak axis cannot hide behind four strong ones.
+      </p>
+      <p>
+        The panel is advisory. It informs the human gate; it never replaces it. In the default
+        mode, a non-ship verdict triggers an automatic regenerate-with-notes pass before the human
+        sees the stage, but the human is still the one who approves. The showrunner's taste is the
+        quality lever, and that is on purpose.
+      </p>
+
+      <h2>The temporal spine</h2>
+      <p>
+        Several of these books braid two timelines (a present-day hunt and a founding story two
+        decades earlier). The state carries an explicit era model: each era has a year and a
+        capability baseline (what technology and tradecraft existed then). A character's beliefs are
+        ordered by <strong>story-time</strong>, not reading order, so a chapter set in the past
+        renders the right state of knowledge even though the reader reaches it late. A deterministic
+        anachronism scan backs this up, flagging period-wrong technology or place names in either
+        direction, with the critic as the semantic backstop.
+      </p>
+
+      <h2>The story-graph studio</h2>
+      <p>
+        When the book is done, the <code>viz</code> stage builds a single self-contained
+        <code>studio.html</code>: a read-only, model-free view of the final state that anyone can
+        open in a browser. It is the asymmetry made literal. All the who-knew-what logic is
+        precomputed in Python; the HTML only renders it.
+      </p>
+      <p>It has two top-level tabs.</p>
+
+      <h3>Story Graph</h3>
+      <p>
+        Knowledge as a graph over chapters. A slider moves the "current chapter," and the graph
+        resolves every character's belief to their story-time state at that point. Three views:
+      </p>
+      <div class="table-wrap">
+        <table class="lud">
+          <thead><tr><th>View</th><th>What it shows</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Knowledge</strong></td><td>a swimlane per character; a dot marks the chapter each one learned a given fact; the reader's lane sits on top, so you can see the gap between what the reader knows and what each character knows</td></tr>
+            <tr><td><strong>3-chapter window</strong></td><td>a denser mesh of acquisitions, corrections, and inferred sources across a moving window</td></tr>
+            <tr><td><strong>Propagation</strong></td><td>the cascade view: how a single secret spreads from character to character over the book</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figure class="lud">
+        <img src="/portfolio/LudLLM/assets/images/screenshots/alpha-v2-storygraph-knowledge.png" alt="Story Graph knowledge swimlane for Alpha V2" loading="lazy">
+        <figcaption>Story Graph, Knowledge swimlane (Alpha V2). The reader knows 23 facts; dots show where each character learned each one.</figcaption>
+      </figure>
+      <figure class="lud">
+        <img src="/portfolio/LudLLM/assets/images/screenshots/alpha-v2-storygraph-propagation.png" alt="Story Graph propagation cascade for Alpha V2" loading="lazy">
+        <figcaption>Story Graph, Propagation cascade (Alpha V2).</figcaption>
+      </figure>
+      <p>
+        A secrets panel underneath lists the reveals near the current chapter, marked hidden,
+        delayed, or never-stated, so you can watch the ledger pay out as you drag the slider.
+      </p>
+
+      <h3>Dossiers</h3>
+      <p>
+        A card grid of the classified character files, each opening into an inline paginated viewer.
+        The dossiers are written so that the redactions are themselves the reveals: what is blacked
+        out for one reader is legible to another, depending on what they are cleared to know.
+      </p>
+      <figure class="lud">
+        <img src="/portfolio/LudLLM/assets/images/screenshots/alpha-v2-dossiers.png" alt="Dossiers tab for Alpha V2" loading="lazy">
+        <figcaption>Dossiers tab (Alpha V2): the classified character files.</figcaption>
+      </figure>
+      <p style="margin-top:18px;">
+        Both studios are playable in the browser, on each novel's page:
+        <a class="tlink" href="/portfolio/LudLLM/alpha/#studio">Alpha</a> and
+        <a class="tlink" href="/portfolio/LudLLM/alpha-v2/#studio">Alpha V2</a>.
+      </p>
+
+      <h2>What ships as samples</h2>
+      <p>
+        Two finished books are published with the engine as samples: <strong>Alpha</strong> (the
+        first proof) and <strong>Alpha V2</strong> (a re-imagining built on a single deliberate
+        canon departure). Each ships as a bound PDF, a full plot synopsis, and its own interactive
+        studio. The real novels driven through the pipeline stay private; only these two samples are
+        public.
+      </p>
+
+      <div class="btn-row" style="margin-top:40px;">
+        <a class="download-btn" href="/portfolio/LudLLM/">
+          <span>Back to LudLLM</span><span class="arrow">→</span>
+        </a>
+        <a class="cta-link" href="https://github.com/devsandip/ludLLM" target="_blank" rel="noopener">
+          The code on GitHub <span>↗</span>
+        </a>
+      </div>
+    </article>
+  </div>
+
+</section>
+</main>
+
+<footer class="site">
+  <div class="footer-inner">
+    <div class="footer-mark">
+      <span class="big">Sandip Dev</span>
+      <span>© 2026 · made quietly</span>
+    </div>
+    <div class="footer-center">
+      Dallas, TX · 32.78°N 96.80°W<br>
+      <span id="local-time">— : — local</span>
+    </div>
+    <div class="footer-right">
+      ludLLM · architecture<br>
+      no cookies. no trackers. no ads.
+    </div>
+  </div>
+</footer>
+
+<div class="palette-switcher">
+  <span class="ps-label">// palette</span>
+  <div class="swatches">
+    <span class="swatch active" data-pal="fog"   title="Cool Fog · Linear-ish"></span>
+    <span class="swatch"        data-pal="white" title="True White · Vercel docs"></span>
+    <span class="swatch"        data-pal="paper" title="Warm Paper · the cream I shipped first"></span>
+    <span class="swatch"        data-pal="ink"   title="Dark / Ink"></span>
+  </div>
+</div>
+
+<script src="/portfolio/LudLLM/ludllm.js"></script>
+</body>
+</html>

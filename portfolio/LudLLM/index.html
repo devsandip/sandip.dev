@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LudLLM: an engine that writes a spy novel end to end · Sandip Dev</title>
+<meta name="description" content="LudLLM is an agentic pipeline that writes a full-length spy novel end to end. Overview, architecture, and the two sample novels with full plots and interactive story graphs.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/portfolio/LudLLM/ludllm.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="header-inner">
+    <a class="logo" href="/">
+      <span class="logo-mark" aria-hidden="true"></span>
+      <span>sandip.dev</span>
+    </a>
+    <nav class="primary">
+      <a href="/#/home">home</a>
+      <a href="/#/about">about</a>
+      <a href="/#/portfolio" class="active">portfolio</a>
+      <a href="/#/resume">work</a>
+      <a href="/#/contact">contact</a>
+    </nav>
+    <div class="header-meta">
+      <span class="status-dot"></span>
+      <span>ludLLM</span>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="page">
+
+  <div class="crumb">
+    <a href="/#/portfolio">portfolio</a>
+    <span class="sep">/</span>
+    <span class="here">LudLLM</span>
+  </div>
+
+  <!-- ─── Hero ─── -->
+  <div class="lud-hero">
+    <div>
+      <div class="label">// an agentic writing engine</div>
+      <h1>Lud<em>LLM</em>.</h1>
+      <p class="lead">
+        An agentic pipeline that writes a full-length spy novel end to end. You give it a
+        paragraph of premise and a secret spine; it returns a grounded world, a cast with
+        private belief states, a structure, an outline, and roughly forty chapters of prose.
+        <strong>A human approves the plan one stage at a time. The models generate.</strong>
+      </p>
+      <div class="btn-row" style="margin-top:28px;">
+        <a class="download-btn" href="https://github.com/devsandip/ludLLM" target="_blank" rel="noopener">
+          <span>View on GitHub</span><span class="arrow">↗</span>
+        </a>
+        <a class="cta-link" href="/portfolio/LudLLM/architecture/">
+          Read the architecture <span>→</span>
+        </a>
+      </div>
+    </div>
+    <div class="lud-hero-aside">
+      <span class="cover"><img src="/portfolio/LudLLM/assets/images/alpha-v2-cover.png" alt="Alpha V2 book cover" loading="lazy"></span>
+    </div>
+  </div>
+
+  <div class="article">
+    <aside class="article-rail">
+      <div class="label">// overview</div>
+      <p class="rail-note">
+        How a few sentences become a novel, and the machinery that holds a secret across
+        80,000 words.
+      </p>
+      <p class="rail-note" style="margin-top:14px;">
+        Public code:<br>
+        <a href="https://github.com/devsandip/ludLLM" target="_blank" rel="noopener">github.com/devsandip/ludLLM</a>
+      </p>
+    </aside>
+
+    <div class="prose">
+      <!-- 1. OVERVIEW -->
+      <p class="lede">
+        LudLLM takes a premise (a paragraph) and a secret spine (who hides what, and when
+        the reader should learn it versus when the protagonist does) and expands it, stage by
+        stage, into a complete novel. The core trick is keeping two things apart: what is true
+        in the story, and what each character believes. That gap, held steady across a whole
+        book, is the entire engine of suspense in a spy novel.
+      </p>
+      <p>
+        The book is stored as data first and words second: one validated state object is the
+        single source of truth, and the prose is a generated view of it. Setup runs as a gated
+        chain (world, cast, structure, outline); a critic from a different model family scores
+        each stage; then a chapter loop drafts, critiques, and extracts belief updates as it
+        writes. I have driven four complete books through it. Two are published here as samples.
+      </p>
+      <p style="font-size:15px; color:var(--ink-soft);">
+        Models: Claude (Opus) drafts and authors, Claude (Haiku) extracts, Gemini critiques.
+        The critic is always a different family than the author. A full setup costs a few cents
+        to under a dollar; a full book is roughly ten to forty dollars of generation. Public
+        code: <a class="tlink" href="https://github.com/devsandip/ludLLM" target="_blank" rel="noopener">github.com/devsandip/ludLLM</a>.
+      </p>
+
+      <!-- 2. LINK TO ARCHITECTURE -->
+      <h2>The architecture</h2>
+      <p>
+        The full write-up covers the stage chain, the single-file state, the no-leak
+        machinery, the cross-family critic, the temporal spine, and the interactive
+        story-graph studio, with the tables and screenshots.
+      </p>
+      <a class="card-link" href="/portfolio/LudLLM/architecture/">
+        <div class="cta-panel">
+          <div>
+            <div class="cp-title">How a few sentences become a novel</div>
+            <div class="cp-desc">The stages, the state object, the secret-keeping guardrails, and the story-graph studio. The complete architecture, with diagrams and tables.</div>
+          </div>
+          <span class="cp-arrow">Read it <span>→</span></span>
+        </div>
+      </a>
+
+      <!-- 3. THE TWO NOVELS -->
+      <h2>The two novels</h2>
+      <p>
+        I ran the same premise through the pipeline twice and kept both results. They share a
+        protagonist (Sita, codename Alpha, a deniable assassin raised by her handler) and a
+        question (what does the truth cost her), and they diverge on one deliberate decision
+        about who the enemy is. Open either to read the full plot and play with its interactive
+        story graph.
+      </p>
+
+      <div class="novel-grid">
+        <a class="card-link" href="/portfolio/LudLLM/alpha/">
+          <div class="novel-card">
+            <div class="nc-cover"><img src="/portfolio/LudLLM/assets/images/alpha-cover.png" alt="Alpha cover" loading="lazy"></div>
+            <div class="nc-body">
+              <div class="nc-tag">version 1</div>
+              <h3>Alpha</h3>
+              <p class="nc-log">The act that made her is the act that saves the country.</p>
+              <p class="nc-plot">
+                An abducted infant is raised over eighteen years into India's most deniable
+                assassin by the handler she calls Baba. When an agent offers her a true but
+                partial story (she was stolen, not rescued), Sita starts reading her handler
+                instead of obeying him, and follows the money into the heart of the service
+                itself. The truth inverts everything: the monstrous man who made her is the only
+                one fighting the real enemy, and every decent instinct around her has been
+                steered to serve it.
+              </p>
+              <p class="nc-meta">~128,000 words · 43 chapters</p>
+              <span class="nc-cta">Open Alpha <span>→</span></span>
+            </div>
+          </div>
+        </a>
+
+        <a class="card-link" href="/portfolio/LudLLM/alpha-v2/">
+          <div class="novel-card">
+            <div class="nc-cover"><img src="/portfolio/LudLLM/assets/images/alpha-v2-cover.png" alt="Alpha V2 cover" loading="lazy"></div>
+            <div class="nc-body">
+              <div class="nc-tag">version 2</div>
+              <h3>Alpha V2</h3>
+              <p class="nc-log">The murdered mother is alive, and the rebellion was her operation.</p>
+              <p class="nc-plot">
+                The same opening, one deliberate departure: the murdered mother is not dead.
+                Sita, conditioned from infancy and certain the enemy killed her mother, defects
+                toward what feels like freedom, helped by a protector and a sympathetic agent.
+                Both the rescue and the rebellion turn out to be authored from a single desk. Her
+                mother faked her death, built a surveillance machine, and watched her daughter for
+                two decades, mistaking watching for love. Sita makes the one choice her mother
+                could not predict.
+              </p>
+              <p class="nc-meta">~112,000 words · 37 chapters</p>
+              <span class="nc-cta">Open Alpha V2 <span>→</span></span>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <p style="margin-top:40px; font-size:14px; color:var(--ink-softer);">
+        Both novels end on earned, unresolved notes. The engine that wrote them is
+        <a class="tlink" href="https://github.com/devsandip/ludLLM" target="_blank" rel="noopener">open source</a>.
+      </p>
+    </div>
+  </div>
+
+</section>
+</main>
+
+<footer class="site">
+  <div class="footer-inner">
+    <div class="footer-mark">
+      <span class="big">Sandip Dev</span>
+      <span>© 2026 · made quietly</span>
+    </div>
+    <div class="footer-center">
+      Dallas, TX · 32.78°N 96.80°W<br>
+      <span id="local-time">— : — local</span>
+    </div>
+    <div class="footer-right">
+      ludLLM · portfolio sample<br>
+      no cookies. no trackers. no ads.
+    </div>
+  </div>
+</footer>
+
+<div class="palette-switcher">
+  <span class="ps-label">// palette</span>
+  <div class="swatches">
+    <span class="swatch active" data-pal="fog"   title="Cool Fog · Linear-ish"></span>
+    <span class="swatch"        data-pal="white" title="True White · Vercel docs"></span>
+    <span class="swatch"        data-pal="paper" title="Warm Paper · the cream I shipped first"></span>
+    <span class="swatch"        data-pal="ink"   title="Dark / Ink"></span>
+  </div>
+</div>
+
+<script src="/portfolio/LudLLM/ludllm.js"></script>
+</body>
+</html>
