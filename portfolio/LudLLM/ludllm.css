@@ -707,6 +707,28 @@ figure.lud.diagram img { padding: 8px; }
 }
 .newtab-btn:hover { color: var(--accent); border-color: var(--accent); }
 
+/* ─── Disclaimer banner (novel pages) ──── */
+.disclaimer {
+  margin-top: 24px;
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent);
+  background: var(--paper-2);
+  padding: 16px 20px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.disclaimer strong { color: var(--ink); font-weight: 600; }
+.disclaimer .dl-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 6px;
+}
+
 /* ─── Novel cards on the overview ──────── */
 .novel-grid {
   margin-top: 8px;
