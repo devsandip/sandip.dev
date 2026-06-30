@@ -1,0 +1,80 @@
+<svg viewBox="0 0 840 430" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <defs>
+    <style>
+      .h{fill:#1d2330;font-weight:700;}
+      .m{fill:#69707f;}
+      .rowlbl{fill:#39414f;font-weight:600;}
+      .pres{fill:#dce9f8;stroke:#3b6ea5;stroke-width:1.6;}
+      .found{fill:#f6e6c8;stroke:#c98a2e;stroke-width:1.6;}
+      .num{fill:#1d2330;font-weight:600;}
+      .lp{stroke:#9cc0ea;stroke-width:1.8;fill:none;opacity:.85;}
+      .lf{stroke:#e2b878;stroke-width:1.8;fill:none;opacity:.95;}
+      .brk{stroke:#aeb6c4;stroke-width:1.4;fill:none;}
+      .bl{fill:#69707f;font-size:12px;}
+    </style>
+  </defs>
+
+  <text x="34" y="38" font-size="17" class="h">Two timelines, braided: the order you read is not the order it happened</text>
+
+  <!-- row labels -->
+  <text x="34" y="116" font-size="12.5" class="rowlbl">You read</text>
+  <text x="34" y="132" font-size="11.5" class="m">in this order</text>
+  <text x="34" y="296" font-size="12.5" class="rowlbl">It happened</text>
+  <text x="34" y="312" font-size="11.5" class="m">in this order</text>
+
+  <!-- braid lines (drawn under the squares) -->
+  <!-- ch1 P: top x90 -> bottom x330 --><path d="M110 150 C110 210, 350 190, 350 250" class="lp"/>
+  <!-- ch2 P: 150 -> 390 --><path d="M170 150 C170 210, 410 190, 410 250" class="lp"/>
+  <!-- ch3 F: 210 -> 90  --><path d="M230 150 C230 210, 110 190, 110 250" class="lf"/>
+  <!-- ch4 P: 270 -> 450 --><path d="M290 150 C290 210, 470 190, 470 250" class="lp"/>
+  <!-- ch5 P: 330 -> 510 --><path d="M350 150 C350 210, 530 190, 530 250" class="lp"/>
+  <!-- ch6 F: 390 -> 150 --><path d="M410 150 C410 210, 170 190, 170 250" class="lf"/>
+  <!-- ch7 P: 450 -> 570 --><path d="M470 150 C470 210, 590 190, 590 250" class="lp"/>
+  <!-- ch8 P: 510 -> 630 --><path d="M530 150 C530 210, 650 190, 650 250" class="lp"/>
+  <!-- ch9 F: 570 -> 210 --><path d="M590 150 C590 210, 230 190, 230 250" class="lf"/>
+  <!-- ch10 P: 630 -> 690 --><path d="M650 150 C650 210, 710 190, 710 250" class="lp"/>
+  <!-- ch11 P: 690 -> 750 --><path d="M710 150 C710 210, 770 190, 770 250" class="lp"/>
+  <!-- ch12 F: 750 -> 270 --><path d="M770 150 C770 210, 290 190, 290 250" class="lf"/>
+
+  <!-- TOP ROW (reading order): chapters 1..12 -->
+  <!-- i0 ch1 P --><rect x="90"  y="110" width="40" height="40" rx="8" class="pres"/><text x="110" y="135" text-anchor="middle" font-size="13" class="num">1</text>
+  <!-- i1 ch2 P --><rect x="150" y="110" width="40" height="40" rx="8" class="pres"/><text x="170" y="135" text-anchor="middle" font-size="13" class="num">2</text>
+  <!-- i2 ch3 F --><rect x="210" y="110" width="40" height="40" rx="8" class="found"/><text x="230" y="135" text-anchor="middle" font-size="13" class="num">3</text>
+  <!-- i3 ch4 P --><rect x="270" y="110" width="40" height="40" rx="8" class="pres"/><text x="290" y="135" text-anchor="middle" font-size="13" class="num">4</text>
+  <!-- i4 ch5 P --><rect x="330" y="110" width="40" height="40" rx="8" class="pres"/><text x="350" y="135" text-anchor="middle" font-size="13" class="num">5</text>
+  <!-- i5 ch6 F --><rect x="390" y="110" width="40" height="40" rx="8" class="found"/><text x="410" y="135" text-anchor="middle" font-size="13" class="num">6</text>
+  <!-- i6 ch7 P --><rect x="450" y="110" width="40" height="40" rx="8" class="pres"/><text x="470" y="135" text-anchor="middle" font-size="13" class="num">7</text>
+  <!-- i7 ch8 P --><rect x="510" y="110" width="40" height="40" rx="8" class="pres"/><text x="530" y="135" text-anchor="middle" font-size="13" class="num">8</text>
+  <!-- i8 ch9 F --><rect x="570" y="110" width="40" height="40" rx="8" class="found"/><text x="590" y="135" text-anchor="middle" font-size="13" class="num">9</text>
+  <!-- i9 ch10 P --><rect x="630" y="110" width="40" height="40" rx="8" class="pres"/><text x="650" y="135" text-anchor="middle" font-size="13" class="num">10</text>
+  <!-- i10 ch11 P --><rect x="690" y="110" width="40" height="40" rx="8" class="pres"/><text x="710" y="135" text-anchor="middle" font-size="13" class="num">11</text>
+  <!-- i11 ch12 F --><rect x="750" y="110" width="40" height="40" rx="8" class="found"/><text x="770" y="135" text-anchor="middle" font-size="13" class="num">12</text>
+
+  <!-- BOTTOM ROW (story order): founding 3,6,9,12 then present 1,2,4,5,7,8,10,11 -->
+  <rect x="90"  y="250" width="40" height="40" rx="8" class="found"/><text x="110" y="275" text-anchor="middle" font-size="13" class="num">3</text>
+  <rect x="150" y="250" width="40" height="40" rx="8" class="found"/><text x="170" y="275" text-anchor="middle" font-size="13" class="num">6</text>
+  <rect x="210" y="250" width="40" height="40" rx="8" class="found"/><text x="230" y="275" text-anchor="middle" font-size="13" class="num">9</text>
+  <rect x="270" y="250" width="40" height="40" rx="8" class="found"/><text x="290" y="275" text-anchor="middle" font-size="13" class="num">12</text>
+  <rect x="330" y="250" width="40" height="40" rx="8" class="pres"/><text x="350" y="275" text-anchor="middle" font-size="13" class="num">1</text>
+  <rect x="390" y="250" width="40" height="40" rx="8" class="pres"/><text x="410" y="275" text-anchor="middle" font-size="13" class="num">2</text>
+  <rect x="450" y="250" width="40" height="40" rx="8" class="pres"/><text x="470" y="275" text-anchor="middle" font-size="13" class="num">4</text>
+  <rect x="510" y="250" width="40" height="40" rx="8" class="pres"/><text x="530" y="275" text-anchor="middle" font-size="13" class="num">5</text>
+  <rect x="570" y="250" width="40" height="40" rx="8" class="pres"/><text x="590" y="275" text-anchor="middle" font-size="13" class="num">7</text>
+  <rect x="630" y="250" width="40" height="40" rx="8" class="pres"/><text x="650" y="275" text-anchor="middle" font-size="13" class="num">8</text>
+  <rect x="690" y="250" width="40" height="40" rx="8" class="pres"/><text x="710" y="275" text-anchor="middle" font-size="13" class="num">10</text>
+  <rect x="750" y="250" width="40" height="40" rx="8" class="pres"/><text x="770" y="275" text-anchor="middle" font-size="13" class="num">11</text>
+
+  <!-- brackets under bottom groups -->
+  <path d="M90 300 L90 308 L310 308 L310 300" class="brk"/>
+  <text x="200" y="326" text-anchor="middle" class="bl">2007 to 2008, the founding</text>
+  <path d="M330 300 L330 308 L790 308 L790 300" class="brk"/>
+  <text x="560" y="326" text-anchor="middle" class="bl">2025, the present</text>
+
+  <!-- legend -->
+  <rect x="300" y="368" width="16" height="16" rx="4" class="pres"/>
+  <text x="324" y="381" class="bl">present-day chapters</text>
+  <rect x="470" y="368" width="16" height="16" rx="4" class="found"/>
+  <text x="494" y="381" class="bl">flashback chapters</text>
+
+  <text x="420" y="412" text-anchor="middle" font-size="12.5" class="m">The system tracks both orders at once, so a flashback shows exactly what each person knew back then, not what they learn later.</text>
+</svg>

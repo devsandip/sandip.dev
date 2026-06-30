@@ -1,0 +1,84 @@
+<svg viewBox="0 0 820 560" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#7f8aa0"/>
+    </marker>
+    <style>
+      .node{stroke-width:1.6;}
+      .reader{fill:#eaf1fb;stroke:#3b6ea5;}
+      .person{fill:#ffffff;stroke:#cfd6e4;stroke-width:1.6;}
+      .secret{fill:#fdecec;stroke:#cf4d54;stroke-width:1.8;}
+      .false{fill:#fbf2e2;stroke:#c98a2e;stroke-width:1.6;}
+      .nh{fill:#1d2330;font-weight:700;}
+      .edge{fill:none;stroke:#9aa3b2;stroke-width:2;}
+      .know{stroke:#2f9e6b;}
+      .reads{stroke:#3b6ea5;}
+      .late{stroke:#9aa3b2;stroke-dasharray:6 5;}
+      .fl{stroke:#c98a2e;stroke-dasharray:2 4;stroke-width:2;}
+      .el{fill:#4a5161;font-size:12px;font-weight:600;}
+      .elm{fill:#7a8294;font-size:11px;}
+      .h{fill:#1d2330;font-weight:700;}
+      .m{fill:#69707f;}
+    </style>
+  </defs>
+
+  <text x="34" y="40" font-size="17" class="h">A plot is a graph: people, facts, and who knows what, when</text>
+
+  <!-- edges first (under nodes) -->
+  <!-- reader -> secret -->
+  <path d="M190 132 C260 175, 300 200, 340 224" class="edge reads" marker-end="url(#a1)"/>
+  <text x="232" y="178" class="el" fill="#2c5b96">reads it in chapter 2</text>
+  <!-- fateh -> secret -->
+  <path d="M600 132 C560 175, 520 200, 486 224" class="edge know" marker-end="url(#a1)"/>
+  <text x="540" y="178" class="el" fill="#247a52" text-anchor="end">knew all along</text>
+  <!-- mira -> secret -->
+  <path d="M636 312 C580 305, 540 300, 506 290" class="edge know" marker-end="url(#a1)"/>
+  <text x="556" y="332" class="el" fill="#247a52">knows</text>
+  <!-- sita -> secret (late) -->
+  <path d="M214 430 C300 380, 330 340, 372 312" class="edge late" marker-end="url(#a1)"/>
+  <text x="250" y="392" class="el">learns only in chapter 31</text>
+  <!-- sita -> false belief -->
+  <path d="M214 452 C300 452, 330 452, 360 452" class="edge fl" marker-end="url(#a1)"/>
+  <text x="232" y="486" class="el" fill="#9a6a1f">until then, believes</text>
+
+  <!-- SECRET node -->
+  <rect x="338" y="222" width="150" height="76" rx="14" class="secret"/>
+  <text x="413" y="252" text-anchor="middle" font-size="12.5" class="nh" fill="#b23942">THE SECRET</text>
+  <text x="413" y="272" text-anchor="middle" font-size="12" class="m">the mother is alive</text>
+  <text x="413" y="288" text-anchor="middle" font-size="12" class="m">and runs the enemy</text>
+
+  <!-- Reader node -->
+  <rect x="64" y="80" width="148" height="56" rx="13" class="reader"/>
+  <text x="138" y="106" text-anchor="middle" font-size="14.5" class="nh" fill="#2c5b96">The reader</text>
+  <text x="138" y="124" text-anchor="middle" font-size="11.5" class="m">sees it early</text>
+
+  <!-- Fateh node -->
+  <rect x="596" y="80" width="160" height="56" rx="13" class="person"/>
+  <text x="676" y="106" text-anchor="middle" font-size="14.5" class="nh">Fateh</text>
+  <text x="676" y="124" text-anchor="middle" font-size="11.5" class="m">the handler</text>
+
+  <!-- Mira node -->
+  <rect x="636" y="286" width="148" height="56" rx="13" class="person"/>
+  <text x="710" y="312" text-anchor="middle" font-size="14.5" class="nh">Mira</text>
+  <text x="710" y="330" text-anchor="middle" font-size="11.5" class="m">the recruiter</text>
+
+  <!-- Sita node -->
+  <rect x="58" y="424" width="158" height="62" rx="13" class="person"/>
+  <text x="137" y="450" text-anchor="middle" font-size="14.5" class="nh">Sita</text>
+  <text x="137" y="470" text-anchor="middle" font-size="11.5" class="m">the hero, kept in the dark</text>
+
+  <!-- false belief node -->
+  <rect x="360" y="426" width="270" height="52" rx="12" class="false"/>
+  <text x="495" y="449" text-anchor="middle" font-size="12.5" class="nh" fill="#9a6a1f">a planted false belief</text>
+  <text x="495" y="467" text-anchor="middle" font-size="11.5" class="m">"the enemy killed my mother"</text>
+
+  <!-- legend -->
+  <line x1="64" y1="524" x2="100" y2="524" class="edge reads"/>
+  <text x="108" y="528" class="elm">reader learns</text>
+  <line x1="210" y1="524" x2="246" y2="524" class="edge know"/>
+  <text x="254" y="528" class="elm">character already knows</text>
+  <line x1="430" y1="524" x2="466" y2="524" class="edge late"/>
+  <text x="474" y="528" class="elm">character learns later</text>
+  <line x1="612" y1="524" x2="648" y2="524" class="edge fl"/>
+  <text x="656" y="528" class="elm">believes a lie</text>
+</svg>
