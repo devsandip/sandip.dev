@@ -1132,3 +1132,30 @@ figure.sn-figure.sn-bleed {
 @media (max-width: 880px) {
   .article { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* ─── Walkthrough slot, filled ────────────────────────────────────
+   The dashed border and centred padding belong to the empty placeholder.
+   Once the iframe is in, the box is just a frame around the video. */
+.sn-video.sn-video-live {
+  border-style: solid;
+  display: block;
+  padding: 0;
+}
+
+/* ─── Sticky rail versus full-bleed content ───────────────────────
+   .article-rail is position:sticky, which makes it a positioned box, so it
+   paints above in-flow content no matter the DOM order. Everything that
+   breaks out of the 680px prose column runs underneath it: the bleed figure
+   and all three .sn-wide tables start at the page edge, left of the rail.
+   The result was the contents list floating on top of the diagram.
+
+   Giving the breakout elements a position and a higher z-index puts them
+   back on top. They need an opaque background too, otherwise the rail text
+   still reads through the gaps between table rows and under the figcaption. */
+.article-rail { z-index: 0; }
+figure.sn-figure,
+.prose .sn-wide {
+  position: relative;
+  z-index: 1;
+  background: var(--paper);
+}
