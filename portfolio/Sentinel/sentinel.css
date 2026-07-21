@@ -1119,3 +1119,16 @@ figure.sn-figure.sn-bleed {
 }
 .sn-limits ul li { font-size: 15px; color: var(--ink-soft); }
 .sn-limits ul li::before { background: var(--ink-softer); top: 10px; }
+
+/* ─── Column blowout at the mobile breakpoint ─────────────────────
+   The shared rule collapses .article to `1fr`, which is minmax(auto, 1fr):
+   the auto floor holds the track open to the widest child's min-content.
+   LudLLM has nothing wide enough for that to show. Sentinel does: the
+   900px diagram and the build-versus-buy tables. The track was resolving
+   to 680px inside a 335px container and pushing the page into horizontal
+   overflow instead of letting those children scroll inside their own boxes.
+   minmax(0, 1fr) drops the floor so the column tracks the viewport and
+   .sn-frame / .table-wrap scroll internally, which is what they are for. */
+@media (max-width: 880px) {
+  .article { grid-template-columns: minmax(0, 1fr); }
+}
