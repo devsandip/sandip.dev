@@ -95,7 +95,7 @@ header.site {
   margin: 0 auto;
   padding: 18px 32px;
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 32px;
 }
@@ -915,7 +915,7 @@ footer.site {
 
 /* ─── Responsive ───────────────────────── */
 @media (max-width: 880px) {
-  .header-inner { grid-template-columns: auto 1fr; gap: 16px; padding: 14px 20px; }
+  .header-inner { grid-template-columns: auto minmax(0, 1fr); gap: 16px; padding: 14px 20px; }
   .header-meta { display: none; }
   nav.primary { gap: 0; }
   nav.primary a { padding: 8px 8px; font-size: 11px; }
@@ -931,4 +931,22 @@ footer.site {
   .studio-bar, .studio-note { padding-left: 20px; padding-right: 20px; }
   .palette-switcher { bottom: 12px; right: 12px; padding: 8px; }
   .palette-switcher .ps-label { display: none; }
+}
+
+/* ─── Header nav at small widths ──────────────────────────────────
+   .header-inner was `auto 1fr`, and `1fr` means minmax(auto, 1fr): the auto
+   floor holds the nav track open to its min-content, which for a flex row of
+   five links is all five laid end to end. At 375px the nav wanted 294px and
+   the header could spare 202px, so every page overflowed sideways by 73px.
+   minmax(0, 1fr) lets the track shrink.
+
+   The links still have to fit inside it. Below 560px the logo keeps its mark
+   and drops the wordmark, and the links tighten their padding. All five stay
+   visible down to 320px. */
+@media (max-width: 560px) {
+  .logo span:not(.logo-mark) { display: none; }
+  nav.primary a { padding: 8px 5px; }
+}
+@media (max-width: 380px) {
+  nav.primary a { padding: 8px 3px; }
 }
